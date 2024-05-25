@@ -19,3 +19,8 @@ export const register = async (
   console.log(response.data.message);
   return response;
 };
+
+export const forgotPassword = async (email: string) => {
+  const response = await axios.post('auth/password/forgot', { email });
+  return response.data;
+};

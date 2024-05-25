@@ -3,7 +3,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 
-export default function LoginPage() {
+export default function ForgotPasswordPage() {
   return (
     <div className="relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <Link
@@ -48,7 +48,8 @@ export default function LoginPage() {
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
             <p className="text-sm text-muted-foreground">
-              Enter your email below to login to your account
+              Forgotten your password? Enter your e-mail address below, and
+              we'll send you an e-mail allowing you to reset it.
             </p>
           </div>
           <UserAuthForm />
