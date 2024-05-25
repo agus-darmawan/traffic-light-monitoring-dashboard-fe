@@ -18,6 +18,7 @@ import {
   LucideIcon,
   LucideProps,
   Moon,
+  Globe,
   MoreVertical,
   Pizza,
   Plus,
@@ -28,7 +29,8 @@ import {
   User,
   User2Icon,
   UserX2Icon,
-  X
+  X,
+  MapPin
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -38,6 +40,7 @@ export const Icons = {
   logo: Command,
   login: LogIn,
   close: X,
+  globe: Globe,
   profile: User2Icon,
   spinner: Loader2,
   kanban: CircuitBoardIcon,
@@ -49,6 +52,7 @@ export const Icons = {
   page: File,
   media: Image,
   settings: Settings,
+  map: MapPin,
   billing: CreditCard,
   ellipsis: MoreVertical,
   add: Plus,

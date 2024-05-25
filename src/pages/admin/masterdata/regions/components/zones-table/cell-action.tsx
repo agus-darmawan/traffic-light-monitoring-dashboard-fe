@@ -52,20 +52,31 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       <Modal isOpen={openUpdate} onClose={() => setOpenUpdate(false)}>
         <ZoneUpdateForm modalClose={() => setOpenUpdate(false)} data={data} />
       </Modal>
-      <Button
-        variant="outline"
-        className="mr-3 px-2 pl-2"
-        onClick={() => setOpenUpdate(true)}
-      >
-        <Edit className="h-4 w-4" />
+
+      <Button variant="secondary" className="px-3 py-2">
+        <Edit className="mr-2 h-4 w-4" />
       </Button>
-      <Button
-        variant="destructive"
-        className="px-2 py-2"
-        onClick={() => setOpen(true)}
-      >
-        <Trash className="h-4 w-4" />
+      <Button variant="secondary" className="px-3 py-2">
+        <Trash className="mr-2 h-4 w-4" />
       </Button>
+
+      {/* <DropdownMenu modal={false}>
+        <DropdownMenuTrigger asChild>
+          <Button variant="secondary" className="px-3 py-2">
+            <span className="text-center ">Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+          <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
+            <Edit className="mr-2 h-4 w-4" /> Update
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setOpen(true)}>
+            <Trash className="mr-2 h-4 w-4" /> Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu> */}
     </>
   );
 };

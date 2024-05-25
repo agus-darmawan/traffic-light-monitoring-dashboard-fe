@@ -14,6 +14,18 @@ export const navItems: NavItem[] = [
     label: 'Student'
   },
   {
+    title: 'Zones',
+    href: 'masterdata/zones',
+    icon: 'globe',
+    label: 'Zones'
+  },
+  {
+    title: 'Regions',
+    href: 'masterdata/regions',
+    icon: 'map',
+    label: 'Regions'
+  },
+  {
     title: 'Login',
     href: '/login',
     icon: 'login',
