@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { AxiosError } from 'axios';
 import {
   Form,
   FormControl,
@@ -8,75 +9,135 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useRouter } from '@/routes/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { register as registerUser } from '@/api/auth';
+import { useState } from 'react';
+import { useRouter } from '@/routes/hooks';
+import { useToast } from '@/components/ui/use-toast';
 
-const formSchema = z.object({
-  email: z.string().email({ message: 'Enter a valid email address' })
-});
+const formSchema = z
+  .object({
+    email: z.string().email({ message: 'Enter a valid email address' }),
+    password: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters' }),
+    passwordConfirmation: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters' })
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: 'Passwords must match',
+    path: ['passwordConfirmation']
+  });
 
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
+  const { toast } = useToast();
   const router = useRouter();
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const defaultValues = {
-    email: 'demo@gmail.com'
+    email: 'email@gmail.com',
+    password: '',
+    passwordConfirmation: ''
   };
+
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues
   });
 
   const onSubmit = async (data: UserFormValue) => {
-    console.log('data', data);
-    router.push('/');
+    setLoading(true);
+    try {
+      await registerUser(data.email, data.password, data.passwordConfirmation);
+      toast({
+        title: 'Register Success',
+        description: 'Congratulations, you have registered please Login'
+      });
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
+    } catch (error) {
+      if (
+        error instanceof AxiosError &&
+        error.response &&
+        error.response.status === 409
+      ) {
+        toast({
+          title: 'Email already taken',
+          description:
+            'The email address you entered is already registered. Please use a different email address.'
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
-
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-2"
-        >
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="Enter your email..."
-                    disabled={loading}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button disabled={loading} className="ml-auto w-full" type="submit">
-            Continue With Email
-          </Button>
-        </form>
-      </Form>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
-      </div>
-    </>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-2">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder="Enter your email..."
+                  disabled={loading}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Enter your password..."
+                  disabled={loading}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="passwordConfirmation"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Confirm your password..."
+                  disabled={loading}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button disabled={loading} className="ml-auto w-full" type="submit">
+          {loading ? 'Registering...' : 'Continue With Email'}
+        </Button>
+      </form>
+    </Form>
   );
 }
