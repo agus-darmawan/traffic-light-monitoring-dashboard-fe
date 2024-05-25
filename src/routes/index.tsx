@@ -6,6 +6,7 @@ const DashboardLayout = lazy(
   () => import('@/components/layout/dashboard-layout')
 );
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
+const LoginPage = lazy(() => import('@/pages/auth/login'));
 const DashboardPage = lazy(() => import('@/pages/dashboard'));
 const StudentPage = lazy(() => import('@/pages/students'));
 const StudentDetailPage = lazy(
@@ -46,6 +47,11 @@ export default function AppRouter() {
     {
       path: '/register',
       element: <SignInPage />,
+      index: true
+    },
+    {
+      path: '/login',
+      element: <LoginPage />,
       index: true
     },
     {

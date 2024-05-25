@@ -13,27 +13,19 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { register as registerUser } from '@/api/auth';
+import { login as loginUser } from '@/api/auth';
 import { useState } from 'react';
 import { useRouter } from '@/routes/hooks';
 import { useToast } from '@/components/ui/use-toast';
 
-const formSchema = z
-  .object({
-    email: z.string().email({ message: 'Enter a valid email address' }),
-    password: z
-      .string()
-      .min(8, { message: 'Password must be at least 8 characters' }),
-    passwordConfirmation: z
-      .string()
-      .min(8, { message: 'Password must be at least 8 characters' })
-  })
-  .refine((data) => data.password === data.passwordConfirmation, {
-    message: 'Passwords must match',
-    path: ['passwordConfirmation']
-  });
+const formLoginSchema = z.object({
+  email: z.string().email({ message: 'Enter a valid email address' }),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters' })
+});
 
-type UserFormValue = z.infer<typeof formSchema>;
+type UserFormValue = z.infer<typeof formLoginSchema>;
 
 export default function UserAuthForm() {
   const { toast } = useToast();
@@ -42,34 +34,28 @@ export default function UserAuthForm() {
 
   const defaultValues = {
     email: '',
-    password: '',
-    passwordConfirmation: ''
+    password: ''
   };
 
   const form = useForm<UserFormValue>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formLoginSchema),
     defaultValues
   });
 
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true);
     try {
-      await registerUser(data.email, data.password, data.passwordConfirmation);
+      await loginUser(data.email, data.password);
       toast({
-        title: 'Register Success',
-        description: 'Congratulations, you have registered please Login'
+        title: 'Login Success',
+        description: 'Congratulations, you have login'
       });
-      router.push('/login');
+      router.push('/');
     } catch (error) {
-      if (
-        error instanceof AxiosError &&
-        error.response &&
-        error.response.status === 409
-      ) {
+      if (error instanceof AxiosError && error.response) {
         toast({
-          title: 'Email already taken',
-          description:
-            'The email address you entered is already registered. Please use a different email address.'
+          title: 'Login Failed',
+          description: 'Please check your email and password'
         });
       }
     } finally {
@@ -115,36 +101,24 @@ export default function UserAuthForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="passwordConfirmation"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Confirm your password..."
-                  disabled={loading}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <Button disabled={loading} className="ml-auto w-full" type="submit">
-          {loading ? 'Registering...' : 'Register'}
+          {loading ? 'Loading...' : 'Login'}
         </Button>
         <div className=" flex gap-2 pt-2 text-sm">
-          <h3 className="">Allredy have account</h3>
+          <h3 className="">Does't have account</h3>
           <Link
-            to="/login"
+            to="/register"
             className="underline underline-offset-4 hover:text-primary"
           >
-            Login
+            Register
           </Link>{' '}
         </div>
+        <Link
+          to="/register"
+          className=" text-sm underline underline-offset-4 hover:text-primary"
+        >
+          Forgot password
+        </Link>{' '}
       </form>
     </Form>
   );
