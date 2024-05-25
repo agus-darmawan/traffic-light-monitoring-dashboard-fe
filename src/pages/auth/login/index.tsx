@@ -13,7 +13,7 @@ export default function LoginPage() {
           'absolute right-4 top-4 hidden md:right-8 md:top-8'
         )}
       >
-        Forgot Password
+        Login
       </Link>
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r  lg:flex">
         <div className="absolute inset-0 bg-primary dark:bg-secondary" />

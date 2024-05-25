@@ -5,6 +5,9 @@ import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 const DashboardLayout = lazy(
   () => import('@/components/layout/dashboard-layout')
 );
+const NotAdminRedirect = lazy(
+  () => import('@/components/layout/not-admin-redirect')
+);
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const LoginPage = lazy(() => import('@/pages/auth/login'));
 const ForgotPasswordPage = lazy(() => import('@/pages/auth/forgot-password'));
@@ -22,6 +25,7 @@ export default function AppRouter() {
       path: '/',
       element: (
         <DashboardLayout>
+          <NotAdminRedirect />
           <Suspense>
             <Outlet />
           </Suspense>

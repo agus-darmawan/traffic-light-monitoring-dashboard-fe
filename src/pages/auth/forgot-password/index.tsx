@@ -46,7 +46,9 @@ export default function ForgotPasswordPage() {
       <div className="flex h-full items-center p-4 lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Forgot Password
+            </h1>
             <p className="text-sm text-muted-foreground">
               Forgotten your password? Enter your e-mail address below, and
               we'll send you an e-mail allowing you to reset it.

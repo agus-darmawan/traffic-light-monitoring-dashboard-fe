@@ -1,8 +1,16 @@
-import axios from './axios';
+import axios from '@/lib/axios';
+import useAuthStore from '@/stores/useAuthStore';
 
 export const login = async (email: string, password: string) => {
-  const response = await axios.post('auth/login', { email, password });
-  return response.data;
+  try {
+    const response = await axios.post('auth/login', { email, password });
+    const token = response.data.data.token;
+    console.log(token);
+    useAuthStore.setState({ token });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const register = async (
@@ -10,17 +18,23 @@ export const register = async (
   password: string,
   password_confirmation: string
 ) => {
-  console.log(email, password, password_confirmation);
-  const response = await axios.post('auth/register', {
-    email,
-    password,
-    password_confirmation
-  });
-  console.log(response.data.message);
-  return response;
+  try {
+    const response = await axios.post('auth/register', {
+      email,
+      password,
+      password_confirmation
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const forgotPassword = async (email: string) => {
-  const response = await axios.post('auth/password/forgot', { email });
-  return response.data;
+  try {
+    const response = await axios.post('auth/password/forgot', { email });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
