@@ -13,9 +13,7 @@ const LoginPage = lazy(() => import('@/pages/auth/login'));
 const ForgotPasswordPage = lazy(() => import('@/pages/auth/forgot-password'));
 const DashboardPage = lazy(() => import('@/pages/dashboard'));
 const StudentPage = lazy(() => import('@/pages/students'));
-const StudentDetailPage = lazy(
-  () => import('@/pages/students/StudentDetailPage')
-);
+const ZonesPage = lazy(() => import('@/pages/admin/masterdata/zones'));
 
 // ----------------------------------------------------------------------
 
@@ -37,12 +35,12 @@ export default function AppRouter() {
           index: true
         },
         {
-          path: 'student',
-          element: <StudentPage />
+          path: 'masterdata/zones',
+          element: <ZonesPage />
         },
         {
-          path: 'student/details',
-          element: <StudentDetailPage />
+          path: 'student',
+          element: <StudentPage />
         }
       ]
     }
