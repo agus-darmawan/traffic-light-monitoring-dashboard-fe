@@ -44,7 +44,7 @@ export default function AppRouter() {
 
   const publicRoutes = [
     {
-      path: '/login',
+      path: '/register',
       element: <SignInPage />,
       index: true
     },

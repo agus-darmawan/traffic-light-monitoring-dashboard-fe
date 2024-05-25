@@ -8,6 +8,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
+import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -40,7 +41,7 @@ export default function UserAuthForm() {
   const [loading, setLoading] = useState(false);
 
   const defaultValues = {
-    email: 'email@gmail.com',
+    email: '',
     password: '',
     passwordConfirmation: ''
   };
@@ -135,8 +136,17 @@ export default function UserAuthForm() {
           )}
         />
         <Button disabled={loading} className="ml-auto w-full" type="submit">
-          {loading ? 'Registering...' : 'Continue With Email'}
+          {loading ? 'Registering...' : 'Register'}
         </Button>
+        <div className=" flex gap-2 pt-2 text-sm">
+          <h3 className="">Allredy have account</h3>
+          <Link
+            to="/login"
+            className="underline underline-offset-4 hover:text-primary"
+          >
+            Login
+          </Link>{' '}
+        </div>
       </form>
     </Form>
   );
