@@ -24,7 +24,7 @@ export const columns: ColumnDef<Device>[] = [
     enableHiding: false
   },
   {
-    accessorKey: 'id',
+    accessorKey: 'tid',
     header: 'DEVICE TID'
   },
   {
