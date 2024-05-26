@@ -15,6 +15,9 @@ const DashboardPage = lazy(() => import('@/pages/admin/dashboard'));
 const ZonesPage = lazy(() => import('@/pages/admin/masterdata/zones'));
 const RegionsPage = lazy(() => import('@/pages/admin/masterdata/regions'));
 const DevicesPage = lazy(() => import('@/pages/admin/masterdata/devices'));
+const UsersPage = lazy(() => import('@/pages/admin/users'));
+
+// ---------------------------------------------------
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +49,10 @@ export default function AppRouter() {
         {
           path: 'masterdata/devices',
           element: <DevicesPage />
+        },
+        {
+          path: 'users',
+          element: <UsersPage />
         }
       ]
     }

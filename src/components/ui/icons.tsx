@@ -31,7 +31,8 @@ import {
   UserX2Icon,
   X,
   MapPin,
-  PcCase
+  PcCase,
+  UserRoundSearch
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -47,6 +48,7 @@ export const Icons = {
   kanban: CircuitBoardIcon,
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
+  usersearch: UserRoundSearch,
   trash: Trash,
   employee: UserX2Icon,
   post: FileText,

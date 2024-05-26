@@ -24,6 +24,12 @@ export const navItems: NavItem[] = [
     href: 'masterdata/devices',
     icon: 'pccase',
     label: 'Devices Data'
+  },
+  {
+    title: 'Users',
+    href: '/users',
+    icon: 'user',
+    label: 'Users'
   }
 ];
 
