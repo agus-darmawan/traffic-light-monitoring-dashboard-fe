@@ -1,28 +1,14 @@
-import { useEffect, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import type { Region } from '@/types/region';
+import type { Zones } from '@/types/zones';
 import { CellAction } from './cell-action';
-import { show } from '@/api/zones';
-import useAuthStore from '@/stores/useAuthStore';
 
-const ZoneNameCell = ({ zoneId }) => {
-  const [zoneName, setZoneName] = useState('Loading...');
-  const getToken = useAuthStore((state) => state.getToken);
-
-  useEffect(() => {
-    const getZoneName = async () => {
-      const name = await show(zoneId, getToken());
-      setZoneName(name.name || 'Not found');
-    };
-
-    getZoneName();
-  }, [zoneId, getToken]);
-
-  return <span>{zoneName}</span>;
+type TColumnDef = Region & {
+  zones: Zones;
 };
 
-export const columns: ColumnDef<Region>[] = [
+export const columns: ColumnDef<TColumnDef>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -47,9 +33,8 @@ export const columns: ColumnDef<Region>[] = [
     header: 'REGION NAME'
   },
   {
-    accessorKey: 'zone_id',
-    header: 'ZONE NAME',
-    cell: ({ row }) => <ZoneNameCell zoneId={row.original.zone_id} />
+    accessorKey: 'zone_name',
+    header: 'ZONE NAME'
   },
   {
     accessorKey: 'timezone',
@@ -58,6 +43,8 @@ export const columns: ColumnDef<Region>[] = [
   {
     header: 'ACTIONS',
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />
+    cell: ({ row }) => (
+      <CellAction data={row.original} zones={row.original.zones} />
+    )
   }
 ];

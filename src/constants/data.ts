@@ -8,28 +8,16 @@ export const navItems: NavItem[] = [
     label: 'Dashboard'
   },
   {
-    title: 'Students',
-    href: '/student',
-    icon: 'user',
-    label: 'Student'
-  },
-  {
     title: 'Zones',
     href: 'masterdata/zones',
     icon: 'globe',
-    label: 'Zones'
+    label: 'Zones Data'
   },
   {
     title: 'Regions',
     href: 'masterdata/regions',
     icon: 'map',
-    label: 'Regions'
-  },
-  {
-    title: 'Login',
-    href: '/login',
-    icon: 'login',
-    label: 'Login'
+    label: 'Regions Data'
   }
 ];
 

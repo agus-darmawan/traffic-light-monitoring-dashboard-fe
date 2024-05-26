@@ -1,4 +1,5 @@
 import Heading from '@/components/shared/heading';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -23,8 +24,6 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { index } from '@/api/zones';
-import { useEffect, useState } from 'react';
 import type { Zones } from '@/types/zones';
 import type { Region } from '@/types/region';
 
@@ -39,31 +38,20 @@ type RegionFormSchemaType = z.infer<typeof regionFormSchema>;
 interface RegionUpdateFormProps {
   modalClose: () => void;
   data: Region;
+  zones: Zones[];
 }
 
 const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
   modalClose,
-  data
+  data,
+  zones
 }) => {
   const { toast } = useToast();
   const { getToken } = useAuthStore();
-  const [zones, setZones] = useState<Array<Zones>>([]);
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(
     data.zone_id
   );
-  const [loading, setLoading] = useState(true);
   const token = getToken();
-
-  useEffect(() => {
-    const fetchZones = async () => {
-      setLoading(true);
-      const fetchedZones = await index(token);
-      setZones(fetchedZones);
-      setLoading(false);
-    };
-
-    fetchZones();
-  }, []);
 
   const form = useForm<RegionFormSchemaType>({
     resolver: zodResolver(regionFormSchema),
@@ -138,38 +126,33 @@ const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
               <FormItem>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" disabled={loading}>
-                      {loading
-                        ? 'Loading...'
-                        : selectedZoneId
-                          ? zones.find((zone) => zone.id === selectedZoneId)
-                              ?.name
-                          : 'Select Zone'}
+                    <Button variant="outline">
+                      {selectedZoneId
+                        ? zones.find((zone) => zone.id === selectedZoneId)?.name
+                        : 'Select Zone'}
                     </Button>
                   </DropdownMenuTrigger>
-                  {!loading && (
-                    <DropdownMenuContent className="w-56">
-                      <DropdownMenuLabel>Select Zone</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuRadioGroup
-                        value={selectedZoneId?.toString()}
-                        onValueChange={(value) => {
-                          const intValue = parseInt(value, 10);
-                          setSelectedZoneId(intValue);
-                          field.onChange(intValue);
-                        }}
-                      >
-                        {zones.map((zone) => (
-                          <DropdownMenuRadioItem
-                            key={zone.id}
-                            value={zone.id.toString()}
-                          >
-                            {zone.name}
-                          </DropdownMenuRadioItem>
-                        ))}
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  )}
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuLabel>Select Zone</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={selectedZoneId?.toString()}
+                      onValueChange={(value) => {
+                        const intValue = parseInt(value, 10);
+                        setSelectedZoneId(intValue);
+                        field.onChange(intValue);
+                      }}
+                    >
+                      {zones.map((zone) => (
+                        <DropdownMenuRadioItem
+                          key={zone.id}
+                          value={zone.id.toString()}
+                        >
+                          {zone.name}
+                        </DropdownMenuRadioItem>
+                      ))}
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
                 </DropdownMenu>
                 <FormMessage />
               </FormItem>

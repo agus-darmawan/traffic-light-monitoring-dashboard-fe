@@ -1,5 +1,6 @@
 import Heading from '@/components/shared/heading';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 import {
   Form,
   FormControl,
@@ -23,8 +24,6 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { index } from '@/api/zones';
-import { useEffect, useState } from 'react';
 import { Zones } from '@/types/zones';
 
 const regionFormSchema = z.object({
@@ -35,30 +34,22 @@ const regionFormSchema = z.object({
 
 type RegionFormSchemaType = z.infer<typeof regionFormSchema>;
 
-const RegionCreateForm = ({ modalClose }: { modalClose: () => void }) => {
+interface RegionUpdateFormProps {
+  modalClose: () => void;
+  zones: Zones[];
+}
+
+const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
+  modalClose,
+  zones
+}) => {
   const { toast } = useToast();
   const { getToken } = useAuthStore();
-  const [zones, setZones] = useState<Array<Zones>>([]);
-  const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [selectedZoneId, setSelectedZoneId] = useState<number | null>();
   const token = getToken();
 
-  useEffect(() => {
-    const fetchZones = async () => {
-      setLoading(true);
-      const fetchedZones = await index(token);
-      setZones(fetchedZones);
-      setLoading(false);
-    };
-
-    fetchZones();
-  }, []);
-
   const form = useForm<RegionFormSchemaType>({
-    resolver: zodResolver(regionFormSchema),
-    defaultValues: {
-      zone_id: selectedZoneId || 0
-    }
+    resolver: zodResolver(regionFormSchema)
   });
 
   const onSubmit = async (values: RegionFormSchemaType) => {
@@ -66,21 +57,22 @@ const RegionCreateForm = ({ modalClose }: { modalClose: () => void }) => {
       await store(values, token);
       toast({
         title: 'Success',
-        description: 'Region has been created successfully'
+        description: 'Region has been updated successfully'
       });
       setTimeout(() => window.location.reload(), 500);
     } catch (error) {
       toast({
         title: 'Failed',
-        description: 'Region failed to be created'
+        description: 'Region failed to be updated'
       });
     }
   };
+
   return (
     <div className="px-2">
       <Heading
-        title={'Create New Region'}
-        description={'Please enter new region data.'}
+        title={'Update Region'}
+        description={'Please edit the value.'}
         className="mb-2 py-2 text-center"
       />
       <Form {...form}>
@@ -124,38 +116,33 @@ const RegionCreateForm = ({ modalClose }: { modalClose: () => void }) => {
               <FormItem>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" disabled={loading}>
-                      {loading
-                        ? 'Loading...'
-                        : selectedZoneId
-                          ? zones.find((zone) => zone.id === selectedZoneId)
-                              ?.name
-                          : 'Select Zone'}
+                    <Button variant="outline">
+                      {selectedZoneId
+                        ? zones.find((zone) => zone.id === selectedZoneId)?.name
+                        : 'Select Zone'}
                     </Button>
                   </DropdownMenuTrigger>
-                  {!loading && (
-                    <DropdownMenuContent className="w-56">
-                      <DropdownMenuLabel>Select Zone</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuRadioGroup
-                        value={selectedZoneId?.toString()}
-                        onValueChange={(value) => {
-                          const intValue = parseInt(value, 10);
-                          setSelectedZoneId(intValue);
-                          field.onChange(intValue);
-                        }}
-                      >
-                        {zones.map((zone) => (
-                          <DropdownMenuRadioItem
-                            key={zone.id}
-                            value={zone.id.toString()}
-                          >
-                            {zone.name}
-                          </DropdownMenuRadioItem>
-                        ))}
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  )}
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuLabel>Select Zone</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={selectedZoneId?.toString()}
+                      onValueChange={(value) => {
+                        const intValue = parseInt(value, 10);
+                        setSelectedZoneId(intValue);
+                        field.onChange(intValue);
+                      }}
+                    >
+                      {zones.map((zone) => (
+                        <DropdownMenuRadioItem
+                          key={zone.id}
+                          value={zone.id.toString()}
+                        >
+                          {zone.name}
+                        </DropdownMenuRadioItem>
+                      ))}
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
                 </DropdownMenu>
                 <FormMessage />
               </FormItem>
@@ -171,7 +158,7 @@ const RegionCreateForm = ({ modalClose }: { modalClose: () => void }) => {
               Cancel
             </Button>
             <Button type="submit" className="rounded-full">
-              Create Region
+              Update Region
             </Button>
           </div>
         </form>
@@ -180,4 +167,4 @@ const RegionCreateForm = ({ modalClose }: { modalClose: () => void }) => {
   );
 };
 
-export default RegionCreateForm;
+export default RegionUpdateForm;
