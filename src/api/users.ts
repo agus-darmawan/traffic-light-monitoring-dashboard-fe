@@ -49,6 +49,7 @@ export const update = async (id: number, regionData: any, token: string) => {
         Authorization: `Bearer ${token}`
       }
     };
+    console.log(id, regionData, token);
     const response = await axios.patch(`users/${id}`, regionData, config);
     console.log(response);
     return response.data.data;
