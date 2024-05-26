@@ -53,8 +53,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, zones }) => {
       <Modal isOpen={openUpdate} onClose={() => setOpenUpdate(false)}>
         <RegionUpdateForm
           modalClose={() => setOpenUpdate(false)}
-          data={data}
-          zones={zones}
+          data={zones}
         />
       </Modal>
       <Button

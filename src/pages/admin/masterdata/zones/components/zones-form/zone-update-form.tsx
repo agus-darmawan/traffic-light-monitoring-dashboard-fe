@@ -1,4 +1,3 @@
-import Heading from '@/components/shared/heading';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -7,6 +6,13 @@ import {
   FormItem,
   FormMessage
 } from '@/components/ui/form';
+import {
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { Edit } from 'lucide-react';
 import type { Zones } from '@/types/zones';
 import useAuthStore from '@/stores/useAuthStore';
@@ -62,14 +68,13 @@ const ZoneUpdateForm: React.FC<ZoneUpdateFormProps> = ({
   };
 
   return (
-    <div className="px-2">
-      <Heading
-        title={'Update Zone'}
-        description={'Please edit value'}
-        className="text-cente mb-2 py-2 text-center"
-      />
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <CardHeader>
+          <CardTitle>Update Zone</CardTitle>
+          <CardDescription>Update entirezone</CardDescription>
+        </CardHeader>
+        <CardContent>
           <FormField
             control={form.control}
             name="name"
@@ -86,23 +91,19 @@ const ZoneUpdateForm: React.FC<ZoneUpdateFormProps> = ({
               </FormItem>
             )}
           />
-
-          <div className="flex items-center justify-center gap-4">
-            <Button
-              type="button"
-              variant="secondary"
-              className="rounded-full "
-              onClick={modalClose}
-            >
-              Cancel
-            </Button>
-            <Button variant="secondary" className="px-3 py-2">
-              <Edit className="mr-2 h-4 w-4" /> Update
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button variant="outline" onClick={modalClose}>
+            Cancel
+          </Button>
+          <Button type="submit">
+            {' '}
+            <Edit className="mr-2 h-4 w-4" />
+            Update
+          </Button>
+        </CardFooter>
+      </form>
+    </Form>
   );
 };
 

@@ -1,19 +1,20 @@
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
-import ZoneUpdateForm from '../zones-form/zone-update-form';
+import RegionUpdateForm from '../regions-form/region-update-form';
 import { useToast } from '@/components/ui/use-toast';
 import useAuthStore from '@/stores/useAuthStore';
-import type { Zones } from '@/types/zones';
-import { destroy } from '@/api/zones';
+import type { Region } from '@/types/region';
+import { destroy } from '@/api/regions';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { Modal } from '@/components/ui/modal';
 
 interface CellActionProps {
-  data: Zones;
+  data: Region;
+  zones: any;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+export const CellAction: React.FC<CellActionProps> = ({ data, zones }) => {
   const { toast } = useToast();
   const { getToken } = useAuthStore();
   const [loading] = useState(false);
@@ -25,7 +26,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       await destroy(data.id, getToken());
       toast({
         title: 'Success',
-        description: 'Zones have been deleted'
+        description: 'Region have been deleted'
       });
       setTimeout(() => window.location.reload(), 2000);
     } catch (error) {
@@ -49,12 +50,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         loading={loading}
       />
 
-      <Modal
-        isOpen={openUpdate}
-        onClose={() => setOpenUpdate(false)}
-        className="m-0 max-w-96 p-0"
-      >
-        <ZoneUpdateForm modalClose={() => setOpenUpdate(false)} data={data} />
+      <Modal isOpen={openUpdate} onClose={() => setOpenUpdate(false)}>
+        <RegionUpdateForm
+          modalClose={() => setOpenUpdate(false)}
+          data={data}
+          zones={zones}
+        />
       </Modal>
       <Button
         variant="outline"

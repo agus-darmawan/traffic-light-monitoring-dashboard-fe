@@ -4,10 +4,11 @@ import useAuthStore from '@/stores/useAuthStore';
 import ZoneTable from './components/zones-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { index } from '@/api/zones';
+import type { Zones } from '@/types/zones';
 
 export default function ZonesPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [zones, setZones] = useState([]);
+  const [zones, setZones] = useState<Array<Zones>>([]);
   const { getToken } = useAuthStore();
   const token = getToken();
 
