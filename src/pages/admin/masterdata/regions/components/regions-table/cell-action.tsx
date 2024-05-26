@@ -1,16 +1,16 @@
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
-import ZoneUpdateForm from '../zones-form/zone-update-form';
+import RegionUpdateForm from '../regions-form/region-update-form';
 import { useToast } from '@/components/ui/use-toast';
 import useAuthStore from '@/stores/useAuthStore';
-import type { Zones } from '@/types/zones';
-import { destroy } from '@/api/zones';
+import type { Region } from '@/types/region';
+import { destroy } from '@/api/regions';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { Modal } from '@/components/ui/modal';
 
 interface CellActionProps {
-  data: Zones;
+  data: Region;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -25,7 +25,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       await destroy(data.id, getToken());
       toast({
         title: 'Success',
-        description: 'Zones have been deleted'
+        description: 'Region have been deleted'
       });
       setTimeout(() => window.location.reload(), 2000);
     } catch (error) {
@@ -50,33 +50,22 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       />
 
       <Modal isOpen={openUpdate} onClose={() => setOpenUpdate(false)}>
-        <ZoneUpdateForm modalClose={() => setOpenUpdate(false)} data={data} />
+        <RegionUpdateForm modalClose={() => setOpenUpdate(false)} data={data} />
       </Modal>
-
-      <Button variant="secondary" className="px-3 py-2">
-        <Edit className="mr-2 h-4 w-4" />
+      <Button
+        variant="outline"
+        className="mr-3 px-2 pl-2"
+        onClick={() => setOpenUpdate(true)}
+      >
+        <Edit className="h-4 w-4" />
       </Button>
-      <Button variant="secondary" className="px-3 py-2">
-        <Trash className="mr-2 h-4 w-4" />
+      <Button
+        variant="destructive"
+        className="px-2 py-2"
+        onClick={() => setOpen(true)}
+      >
+        <Trash className="h-4 w-4" />
       </Button>
-
-      {/* <DropdownMenu modal={false}>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" className="px-3 py-2">
-            <span className="text-center ">Open menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-          <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu> */}
     </>
   );
 };

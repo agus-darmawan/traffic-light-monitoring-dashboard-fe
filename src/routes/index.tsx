@@ -14,6 +14,7 @@ const ForgotPasswordPage = lazy(() => import('@/pages/auth/forgot-password'));
 const DashboardPage = lazy(() => import('@/pages/dashboard'));
 const StudentPage = lazy(() => import('@/pages/students'));
 const ZonesPage = lazy(() => import('@/pages/admin/masterdata/zones'));
+const RegionsPage = lazy(() => import('@/pages/admin/masterdata/regions'));
 
 // ----------------------------------------------------------------------
 
@@ -37,6 +38,10 @@ export default function AppRouter() {
         {
           path: 'masterdata/zones',
           element: <ZonesPage />
+        },
+        {
+          path: 'masterdata/regions',
+          element: <RegionsPage />
         },
         {
           path: 'student',

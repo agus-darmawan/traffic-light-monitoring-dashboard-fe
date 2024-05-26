@@ -5,7 +5,6 @@ import ZoneTableActions from './zone-table-action';
 type TZoneTableProps = {
   zones: any;
   page: number;
-  totalUsers: number;
   pageCount: number;
 };
 

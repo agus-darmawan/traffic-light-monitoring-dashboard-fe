@@ -64,8 +64,8 @@ const ZoneUpdateForm: React.FC<ZoneUpdateFormProps> = ({
   return (
     <div className="px-2">
       <Heading
-        title={'Create New Zone'}
-        description={'Please enter new zone name.'}
+        title={'Update Zone'}
+        description={'Please edit value'}
         className="text-cente mb-2 py-2 text-center"
       />
       <Form {...form}>

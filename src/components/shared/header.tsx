@@ -5,7 +5,8 @@ import UserNav from './user-nav';
 import { ModeToggle } from './theme-toggle';
 
 // Custom hook to find the matched path
-const useMatchedPath = (pathname: string) => {
+
+const useMatchedPath = (pathname) => {
   const matchedPath =
     navItems.find((item) => item.href === pathname) ||
     navItems.find(

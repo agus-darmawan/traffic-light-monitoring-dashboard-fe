@@ -29,11 +29,7 @@ export default function ZonesPage() {
   if (isLoading) {
     return (
       <div className="p-5">
-        <DataTableSkeleton
-          columnCount={2}
-          filterableColumnCount={2}
-          searchableColumnCount={1}
-        />
+        <DataTableSkeleton columnCount={2} searchableColumnCount={1} />
       </div>
     );
   }
@@ -41,12 +37,7 @@ export default function ZonesPage() {
   return (
     <div className="p-5">
       <PageHead title="Zone | MasterData" />
-      <ZoneTable
-        zones={zones}
-        pageCount={1}
-        page={0}
-        totalUsers={zones.length}
-      />
+      <ZoneTable zones={zones} pageCount={1} page={0} />
     </div>
   );
 }
