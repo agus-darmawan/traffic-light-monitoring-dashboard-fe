@@ -1,5 +1,12 @@
-import Heading from '@/components/shared/heading';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import {
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -7,24 +14,23 @@ import {
   FormItem,
   FormMessage
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { Edit } from 'lucide-react';
 import useAuthStore from '@/stores/useAuthStore';
 import { useToast } from '@/components/ui/use-toast';
 import { store } from '@/api/regions';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { index } from '@/api/zones';
-import { useEffect, useState } from 'react';
 import { Zones } from '@/types/zones';
 
 const regionFormSchema = z.object({
@@ -35,19 +41,23 @@ const regionFormSchema = z.object({
 
 type RegionFormSchemaType = z.infer<typeof regionFormSchema>;
 
-const RegionCreateForm = ({ modalClose }: { modalClose: () => void }) => {
+interface RegionCreateFormProps {
+  modalClose: () => void;
+  zones: Zones[];
+}
+
+const RegionCreateForm: React.FC<RegionCreateFormProps> = ({
+  modalClose,
+  zones
+}) => {
   const { toast } = useToast();
   const { getToken } = useAuthStore();
-  const [zones, setZones] = useState<Array<Zones>>([]);
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [selectedTimezone, setSelectedTimezone] = useState<string | null>(null);
   const token = getToken();
 
   const form = useForm<RegionFormSchemaType>({
-    resolver: zodResolver(regionFormSchema),
-    defaultValues: {
-      zone_id: selectedZoneId || 0
-    }
+    resolver: zodResolver(regionFormSchema)
   });
 
   const onSubmit = async (values: RegionFormSchemaType) => {
@@ -65,15 +75,15 @@ const RegionCreateForm = ({ modalClose }: { modalClose: () => void }) => {
       });
     }
   };
+
   return (
-    <div className="px-2">
-      <Heading
-        title={'Create New Region'}
-        description={'Please enter new region data.'}
-        className="mb-2 py-2 text-center"
-      />
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <CardHeader>
+          <CardTitle>Create Region</CardTitle>
+          <CardDescription>Create new region</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
           <FormField
             control={form.control}
             name="name"
@@ -96,11 +106,25 @@ const RegionCreateForm = ({ modalClose }: { modalClose: () => void }) => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    placeholder="Enter timezone"
-                    {...field}
-                    className="px-4 py-2 shadow-inner drop-shadow-xl"
-                  />
+                  <Select
+                    value={selectedTimezone?.toString() || ''}
+                    onValueChange={(value) => {
+                      setSelectedTimezone(value);
+                      field.onChange(value);
+                    }}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select timezone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Timezone</SelectLabel>
+                        <SelectItem value="WIT">WIT</SelectItem>
+                        <SelectItem value="WITA">WITA</SelectItem>
+                        <SelectItem value="WIB">WIB</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -111,61 +135,46 @@ const RegionCreateForm = ({ modalClose }: { modalClose: () => void }) => {
             name="zone_id"
             render={({ field }) => (
               <FormItem>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" disabled={loading}>
-                      {loading
-                        ? 'Loading...'
-                        : selectedZoneId
-                          ? zones.find((zone) => zone.id === selectedZoneId)
-                              ?.name
-                          : 'Select Zone'}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  {!loading && (
-                    <DropdownMenuContent className="w-56">
-                      <DropdownMenuLabel>Select Zone</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuRadioGroup
-                        value={selectedZoneId?.toString()}
-                        onValueChange={(value) => {
-                          const intValue = parseInt(value, 10);
-                          setSelectedZoneId(intValue);
-                          field.onChange(intValue);
-                        }}
-                      >
+                <FormControl>
+                  <Select
+                    value={selectedZoneId?.toString() || ''}
+                    onValueChange={(value) => {
+                      const intValue = parseInt(value, 10);
+                      setSelectedZoneId(intValue);
+                      field.onChange(intValue);
+                    }}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Zone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Select Zone</SelectLabel>
                         {zones.map((zone) => (
-                          <DropdownMenuRadioItem
-                            key={zone.id}
-                            value={zone.id.toString()}
-                          >
+                          <SelectItem key={zone.id} value={zone.id.toString()}>
                             {zone.name}
-                          </DropdownMenuRadioItem>
+                          </SelectItem>
                         ))}
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  )}
-                </DropdownMenu>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className="flex items-center justify-center gap-4">
-            <Button
-              type="button"
-              variant="secondary"
-              className="rounded-full"
-              onClick={modalClose}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" className="rounded-full">
-              Create Region
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button variant="outline" onClick={modalClose}>
+            Cancel
+          </Button>
+          <Button type="submit">
+            <Edit className="mr-2 h-4 w-4" />
+            Create
+          </Button>
+        </CardFooter>
+      </form>
+    </Form>
   );
 };
 

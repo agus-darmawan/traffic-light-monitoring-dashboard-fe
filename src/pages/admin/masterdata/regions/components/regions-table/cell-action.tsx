@@ -11,10 +11,9 @@ import { Modal } from '@/components/ui/modal';
 
 interface CellActionProps {
   data: Region;
-  zones: any;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data, zones }) => {
+export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { toast } = useToast();
   const { getToken } = useAuthStore();
   const [loading] = useState(false);
@@ -50,11 +49,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data, zones }) => {
         loading={loading}
       />
 
-      <Modal isOpen={openUpdate} onClose={() => setOpenUpdate(false)}>
-        <RegionUpdateForm
-          modalClose={() => setOpenUpdate(false)}
-          data={zones}
-        />
+      <Modal
+        isOpen={openUpdate}
+        onClose={() => setOpenUpdate(false)}
+        className="m-0 max-w-96 p-0"
+      >
+        <RegionUpdateForm modalClose={() => setOpenUpdate(false)} data={data} />
       </Modal>
       <Button
         variant="outline"

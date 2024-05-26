@@ -1,14 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import type { Region } from '@/types/region';
-import type { Zones } from '@/types/zones';
 import { CellAction } from './cell-action';
 
-type TColumnDef = Region & {
-  zones: Zones;
-};
-
-export const columns: ColumnDef<TColumnDef>[] = [
+export const columns: ColumnDef<Region>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -43,8 +38,6 @@ export const columns: ColumnDef<TColumnDef>[] = [
   {
     header: 'ACTIONS',
     id: 'actions',
-    cell: ({ row }) => (
-      <CellAction data={row.original} zones={row.original.zones} />
-    )
+    cell: ({ row }) => <CellAction data={row.original} />
   }
 ];

@@ -1,5 +1,4 @@
-import Heading from '@/components/shared/heading';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -9,14 +8,22 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { Edit } from 'lucide-react';
 import useAuthStore from '@/stores/useAuthStore';
 import { useToast } from '@/components/ui/use-toast';
 import { update } from '@/api/regions';
@@ -26,6 +33,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import type { Zones } from '@/types/zones';
 import type { Region } from '@/types/region';
+import { index } from '@/api/zones';
 
 const regionFormSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
@@ -38,16 +46,19 @@ type RegionFormSchemaType = z.infer<typeof regionFormSchema>;
 interface RegionUpdateFormProps {
   modalClose: () => void;
   data: Region;
-  zones: Zones[];
 }
 
 const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
   modalClose,
-  data,
-  zones
+  data
 }) => {
   const { toast } = useToast();
   const { getToken } = useAuthStore();
+  const [zones, setZones] = useState<Zones[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedTimezone, setSelectedTimezone] = useState<string | null>(
+    data.timezone
+  );
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(
     data.zone_id
   );
@@ -78,15 +89,30 @@ const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
     }
   };
 
+  useEffect(() => {
+    const fetchZones = async () => {
+      try {
+        setLoading(true);
+        const fetchedZones = await index(token);
+        setZones(fetchedZones);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch zones:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchZones();
+  }, []);
+
   return (
-    <div className="px-2">
-      <Heading
-        title="Update Region"
-        description="Please edit the region data."
-        className="mb-2 py-2 text-center"
-      />
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <CardHeader>
+          <CardTitle>Create Region</CardTitle>
+          <CardDescription>Create new region</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
           <FormField
             control={form.control}
             name="name"
@@ -109,11 +135,25 @@ const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    placeholder="Enter timezone"
-                    {...field}
-                    className="px-4 py-2 shadow-inner drop-shadow-xl"
-                  />
+                  <Select
+                    value={selectedTimezone?.toString() || ''}
+                    onValueChange={(value) => {
+                      setSelectedTimezone(value);
+                      field.onChange(value);
+                    }}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select timezone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Timezone</SelectLabel>
+                        <SelectItem value="WIT">WIT</SelectItem>
+                        <SelectItem value="WITA">WITA</SelectItem>
+                        <SelectItem value="WIB">WIB</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -124,56 +164,55 @@ const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
             name="zone_id"
             render={({ field }) => (
               <FormItem>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      {selectedZoneId
-                        ? zones.find((zone) => zone.id === selectedZoneId)?.name
-                        : 'Select Zone'}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56">
-                    <DropdownMenuLabel>Select Zone</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuRadioGroup
-                      value={selectedZoneId?.toString()}
-                      onValueChange={(value) => {
-                        const intValue = parseInt(value, 10);
-                        setSelectedZoneId(intValue);
-                        field.onChange(intValue);
-                      }}
-                    >
-                      {zones.map((zone) => (
-                        <DropdownMenuRadioItem
-                          key={zone.id}
-                          value={zone.id.toString()}
-                        >
-                          {zone.name}
-                        </DropdownMenuRadioItem>
-                      ))}
-                    </DropdownMenuRadioGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <FormControl>
+                  <Select
+                    value={selectedZoneId?.toString() || ''}
+                    onValueChange={(value) => {
+                      const intValue = parseInt(value, 10);
+                      setSelectedZoneId(intValue);
+                      field.onChange(intValue);
+                    }}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Zone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Select Zone</SelectLabel>
+                        {loading ? (
+                          <SelectItem value="0" disabled>
+                            Loading...
+                          </SelectItem>
+                        ) : (
+                          zones.map((zone) => (
+                            <SelectItem
+                              key={zone.id}
+                              value={zone.id.toString()}
+                            >
+                              {zone.name}
+                            </SelectItem>
+                          ))
+                        )}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className="flex items-center justify-center gap-4">
-            <Button
-              type="button"
-              variant="secondary"
-              className="rounded-full"
-              onClick={modalClose}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" className="rounded-full">
-              Update Region
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button variant="outline" onClick={modalClose}>
+            Cancel
+          </Button>
+          <Button type="submit">
+            <Edit className="mr-2 h-4 w-4" />
+            Create
+          </Button>
+        </CardFooter>
+      </form>
+    </Form>
   );
 };
 
