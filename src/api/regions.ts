@@ -28,6 +28,20 @@ export const show = async (id: number, token: string) => {
   }
 };
 
+export const showByZone = async (zone_id: number, token: string) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+    const response = await axios.get(`regions/zone/${zone_id}`, config);
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const store = async (regionData: any, token: string) => {
   try {
     const config = {

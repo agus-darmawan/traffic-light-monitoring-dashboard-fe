@@ -1,4 +1,4 @@
-export type Region = {
+export type Device = {
   id: number;
   name: string;
   zone_id: number;

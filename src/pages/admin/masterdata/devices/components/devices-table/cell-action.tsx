@@ -1,20 +1,19 @@
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
-import RegionUpdateForm from '../regions-form/region-update-form';
+import DeviceUpdateForm from '../devices-form/device-update-form';
 import { useToast } from '@/components/ui/use-toast';
 import useAuthStore from '@/stores/useAuthStore';
-import type { Region } from '@/types/region';
+import type { Device } from '@/types/devices';
 import { destroy } from '@/api/regions';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { Modal } from '@/components/ui/modal';
 
 interface CellActionProps {
-  data: Region;
-  zones: any;
+  device: Device;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data, zones }) => {
+export const CellAction: React.FC<CellActionProps> = ({ device }) => {
   const { toast } = useToast();
   const { getToken } = useAuthStore();
   const [loading] = useState(false);
@@ -23,7 +22,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, zones }) => {
 
   const onConfirm = async () => {
     try {
-      await destroy(data.id, getToken());
+      await destroy(device.id, getToken());
       toast({
         title: 'Success',
         description: 'Region have been deleted'
@@ -51,10 +50,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data, zones }) => {
       />
 
       <Modal isOpen={openUpdate} onClose={() => setOpenUpdate(false)}>
-        <RegionUpdateForm
+        <DeviceUpdateForm
           modalClose={() => setOpenUpdate(false)}
-          data={data}
-          zones={zones}
+          device={device}
         />
       </Modal>
       <Button
