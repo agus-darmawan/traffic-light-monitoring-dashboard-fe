@@ -1,10 +1,44 @@
+import { useState, useEffect } from 'react';
+import useAuthStore from '@/stores/useAuthStore';
 import PageHead from '@/components/shared/page-head.jsx';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Cpu, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
-import RecentRegister from './components/recent-register';
+import DeviceList from './components/device-list';
 import { Badge } from '@/components/ui/badge';
+import { index } from '@/api/dashboard';
+import type { ResultType } from '@/api/dashboard';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DashboardPage() {
+  const [isLoading, setIsLoading] = useState(true);
+  const { getToken } = useAuthStore();
+  const [data, setData] = useState<ResultType>();
+  const token = getToken();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await index(token);
+        setData(data);
+        console.log(data);
+      } catch (error) {
+        console.error('Error fetching error:', error);
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [token]);
+
+  if (isLoading) {
+    return (
+      <div className="p-5">
+        <Skeleton />
+      </div>
+    );
+  }
   return (
     <>
       <PageHead title="Dashboard | App" />
@@ -21,10 +55,7 @@ export default function DashboardPage() {
               <Cpu />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
-              <p className="text-xs text-muted-foreground">
-                +180.1% from last month
-              </p>
+              <div className="text-2xl font-bold">{data?.all_devices}</div>
             </CardContent>
           </Card>
           <Card>
@@ -35,10 +66,7 @@ export default function DashboardPage() {
               <CheckCircle />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
-              <p className="text-xs text-muted-foreground">
-                +180.1% from last month
-              </p>
+              <div className="text-2xl font-bold">{data?.active.count}</div>
             </CardContent>
           </Card>
           <Card>
@@ -49,10 +77,7 @@ export default function DashboardPage() {
               <AlertCircle />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+12,234</div>
-              <p className="text-xs text-muted-foreground">
-                +19% from last month
-              </p>
+              <div className="text-2xl font-bold">{data?.issue.count}</div>
             </CardContent>
           </Card>
           <Card>
@@ -63,10 +88,7 @@ export default function DashboardPage() {
               <XCircle />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+573</div>
-              <p className="text-xs text-muted-foreground">
-                +201 since last hour
-              </p>
+              <div className="text-2xl font-bold">{data?.problem.count}</div>
             </CardContent>
           </Card>
         </div>
@@ -78,7 +100,7 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <RecentRegister />
+              <DeviceList data={data?.active.devices} />
             </CardContent>
           </Card>
           <Card className="col-span-4">
@@ -88,7 +110,9 @@ export default function DashboardPage() {
                 <Badge className="bg-yellow-500">warn</Badge> Stuck Devices
               </CardTitle>
             </CardHeader>
-            <CardContent className="pl-2"></CardContent>
+            <CardContent className="pl-2">
+              <DeviceList data={data?.issue.devices} />
+            </CardContent>
           </Card>
           <Card className="col-span-4">
             <CardHeader>
@@ -96,7 +120,9 @@ export default function DashboardPage() {
                 <Badge variant="destructive">error</Badge> Problem Devices
               </CardTitle>
             </CardHeader>
-            <CardContent></CardContent>
+            <CardContent>
+              <DeviceList data={data?.problem.devices} />
+            </CardContent>
           </Card>
         </div>
       </div>

@@ -6,7 +6,7 @@ export type Device = {
   zone_name: string;
   region_id: number;
   region_name: string;
-  is_active: boolean;
+  is_active: 'active' | 'problem' | 'issue';
   registered_by_id: number;
   registered_by: string;
 };
