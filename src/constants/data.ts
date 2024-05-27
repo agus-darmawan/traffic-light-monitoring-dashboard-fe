@@ -8,28 +8,40 @@ export const navItems: NavItem[] = [
     label: 'Dashboard'
   },
   {
-    title: 'Zones',
-    href: 'masterdata/zones',
+    title: 'Technicians',
+    href: '/technicians',
+    icon: 'technicians',
+    label: 'Technicians'
+  },
+  {
+    title: 'Zones Data and Status',
+    href: '/zones',
     icon: 'globe',
-    label: 'Zones Data'
+    label: 'Zones'
   },
   {
-    title: 'Regions',
-    href: 'masterdata/regions',
+    title: 'Regions Data and Status',
+    href: '/regions',
     icon: 'map',
-    label: 'Regions Data'
+    label: 'Regions'
   },
   {
-    title: 'Devices',
-    href: 'masterdata/devices',
-    icon: 'pccase',
-    label: 'Devices Data'
+    title: 'Devices Data and Status',
+    href: '/devices',
+    icon: 'cpu',
+    label: 'Devices'
   },
   {
     title: 'Users',
     href: '/users',
     icon: 'user',
     label: 'Users'
+  },
+  {
+    title: 'Administrator',
+    href: '/admin',
+    icon: 'admin',
+    label: 'Administrator'
   }
 ];
 

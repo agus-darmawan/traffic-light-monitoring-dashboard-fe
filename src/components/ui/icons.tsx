@@ -32,7 +32,10 @@ import {
   X,
   MapPin,
   PcCase,
-  UserRoundSearch
+  UserRoundSearch,
+  Cpu,
+  UserRoundCog,
+  ShieldCheck
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -42,8 +45,11 @@ export const Icons = {
   logo: Command,
   login: LogIn,
   close: X,
+  technicians: UserRoundCog,
   globe: Globe,
+  admin: ShieldCheck,
   profile: User2Icon,
+  cpu: Cpu,
   spinner: Loader2,
   kanban: CircuitBoardIcon,
   chevronLeft: ChevronLeft,

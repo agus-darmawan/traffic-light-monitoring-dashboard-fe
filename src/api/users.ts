@@ -1,13 +1,13 @@
 import axios from '@/lib/axios';
 
-export const index = async (token: string) => {
+export const index = async (role: string, token: string) => {
   try {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`
       }
     };
-    const response = await axios.get('users', config);
+    const response = await axios.get(`users/${role}`, config);
     return response.data.data;
   } catch (error) {
     throw error;
