@@ -109,8 +109,8 @@ const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <CardHeader>
-          <CardTitle>Create Region</CardTitle>
-          <CardDescription>Create new region</CardDescription>
+          <CardTitle>Update Region</CardTitle>
+          <CardDescription>Update entire region</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <FormField

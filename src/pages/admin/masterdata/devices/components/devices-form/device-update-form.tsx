@@ -27,7 +27,7 @@ import {
 import { Edit } from 'lucide-react';
 import useAuthStore from '@/stores/useAuthStore';
 import { useToast } from '@/components/ui/use-toast';
-import { store } from '@/api/devices';
+import { update } from '@/api/devices';
 import type { Region } from '@/types/region';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -78,7 +78,7 @@ const DeviceUpdateForm: React.FC<DeviceUpdateFormProps> = ({
 
   const onSubmit = async (values: DeviceFormSchemaType) => {
     try {
-      await store(values, token);
+      await update(device.id, values, token);
       toast({
         title: 'Success',
         description: 'Device has been update successfully'
@@ -115,8 +115,8 @@ const DeviceUpdateForm: React.FC<DeviceUpdateFormProps> = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <CardHeader>
-          <CardTitle>Register Device</CardTitle>
-          <CardDescription>Register new device data</CardDescription>
+          <CardTitle>Update Device</CardTitle>
+          <CardDescription>Update entire device</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <FormField
