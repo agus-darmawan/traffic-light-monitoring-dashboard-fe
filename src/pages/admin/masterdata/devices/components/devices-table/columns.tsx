@@ -2,6 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import type { Device } from '@/types/devices';
 import { CellAction } from './cell-action';
+import { DeviceStatus } from './device-status';
 
 export const columns: ColumnDef<Device>[] = [
   {
@@ -39,6 +40,11 @@ export const columns: ColumnDef<Device>[] = [
   {
     accessorKey: 'region_name',
     header: 'REGION NAME'
+  },
+  {
+    accessorKey: 'is_active',
+    header: 'STATUS',
+    cell: ({ row }) => <DeviceStatus status={row.original.is_active} />
   },
   {
     accessorKey: 'register_by',
