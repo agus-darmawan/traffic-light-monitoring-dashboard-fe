@@ -8,12 +8,6 @@ export const navItems: NavItem[] = [
     label: 'Dashboard'
   },
   {
-    title: 'Technicians',
-    href: '/technicians',
-    icon: 'technicians',
-    label: 'Technicians'
-  },
-  {
     title: 'Zones Data and Status',
     href: '/zones',
     icon: 'globe',
@@ -36,6 +30,12 @@ export const navItems: NavItem[] = [
     href: '/users',
     icon: 'user',
     label: 'Users'
+  },
+  {
+    title: 'Technicians',
+    href: '/technicians',
+    icon: 'technicians',
+    label: 'Technicians'
   },
   {
     title: 'Administrator',
