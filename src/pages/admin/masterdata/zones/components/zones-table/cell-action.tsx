@@ -39,7 +39,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       setOpen(false);
     }
   };
-
+  console.log('MODAL UPDATE', openUpdate);
   return (
     <>
       <AlertModal

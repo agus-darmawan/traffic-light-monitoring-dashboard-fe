@@ -72,7 +72,7 @@ const ZoneUpdateForm: React.FC<ZoneUpdateFormProps> = ({
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <CardHeader>
           <CardTitle>Update Zone</CardTitle>
-          <CardDescription>Update entirezone</CardDescription>
+          <CardDescription>Update entire zone data</CardDescription>
         </CardHeader>
         <CardContent>
           <FormField

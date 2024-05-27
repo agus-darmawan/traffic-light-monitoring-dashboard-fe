@@ -49,7 +49,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         loading={loading}
       />
 
-      <Modal isOpen={openUpdate} className="m-0 max-w-96 p-0">
+      <Modal
+        isOpen={openUpdate}
+        onClose={() => setOpenUpdate(false)}
+        className="m-0 max-w-96 p-0"
+      >
         <UserUpdateForm modalClose={() => setOpenUpdate(false)} data={data} />
       </Modal>
       <Button
