@@ -65,6 +65,15 @@ export const auth = () => {
     } catch {}
   };
 
+  const checkRole = async () => {
+    try {
+      const { data } = await axios.get('/auth/role');
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  };
+
   return {
     loggedIn: !!getCookie('auth.__token'),
     login,
@@ -73,6 +82,7 @@ export const auth = () => {
     resetPassword,
     resendEmailVerification,
     verifyEmail,
-    logout
+    logout,
+    checkRole
   };
 };

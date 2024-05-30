@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Form,
   FormControl,
@@ -31,11 +31,12 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { auth } from '@/api/auth';
 
 const userFormSchema = z.object({
-  email: z.string().min(1, { message: 'name is required' }),
+  email: z.string().min(1, { message: 'Email is required' }),
   email_verified: z.boolean(),
-  role: z.string().min(1, { message: 'role is required' })
+  role: z.string().min(1, { message: 'Role is required' })
 });
 
 type UserFormSchemaType = z.infer<typeof userFormSchema>;
@@ -50,8 +51,20 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({
   data
 }) => {
   const { toast } = useToast();
-  const [selectedRole, setSelectedRole] = useState<string>();
+  const [selectedRole, setSelectedRole] = useState<string>('');
   const { updateUser } = users();
+  const { checkRole } = auth();
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getRole = async () => {
+      const role = await checkRole();
+      setRole(role);
+    };
+
+    getRole();
+  }, []);
+
   const form = useForm<UserFormSchemaType>({
     resolver: zodResolver(userFormSchema),
     defaultValues: {
@@ -62,11 +75,11 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({
 
   const onSubmit = async (values: UserFormSchemaType) => {
     try {
-      const respone = await updateUser(data.id, values);
-      console.log(respone);
+      const response = await updateUser(data.id, values);
+      console.log(response);
       toast({
         title: 'Success',
-        description: 'User have been updated successfully'
+        description: 'User has been updated successfully'
       });
       setTimeout(() => window.location.reload(), 500);
     } catch (error) {
@@ -78,6 +91,12 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({
       }
     }
   };
+
+  // Role options based on current user role
+  const roleOptions =
+    role === 'superadmin'
+      ? ['admin', 'technician', 'user']
+      : ['technician', 'user'];
 
   return (
     <Form {...form}>
@@ -96,7 +115,7 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({
                   <Input
                     placeholder="Enter email"
                     {...field}
-                    className=" px-4 py-2 shadow-inner drop-shadow-xl"
+                    className="px-4 py-2 shadow-inner drop-shadow-xl"
                   />
                 </FormControl>
                 <FormMessage />
@@ -110,7 +129,7 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({
               <FormItem>
                 <FormControl>
                   <Select
-                    value={selectedRole?.toString() || ''}
+                    value={selectedRole}
                     onValueChange={(value) => {
                       setSelectedRole(value);
                       field.onChange(value);
@@ -121,10 +140,12 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>Timezone</SelectLabel>
-                        <SelectItem value="admin">admin</SelectItem>
-                        <SelectItem value="technician">technician</SelectItem>
-                        <SelectItem value="user">user</SelectItem>
+                        <SelectLabel>Role</SelectLabel>
+                        {roleOptions.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -139,7 +160,6 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({
             Cancel
           </Button>
           <Button type="submit">
-            {' '}
             <Edit className="mr-2 h-4 w-4" />
             Update
           </Button>

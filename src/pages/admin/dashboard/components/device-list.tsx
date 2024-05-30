@@ -15,8 +15,8 @@ export default function DeviceList({ data }: DeviceListProps) {
   return (
     <ScrollArea className="-mt-6 space-y-2 rounded-md md:h-[calc(70vh-220px)]">
       {data.map((item, index) => (
-        <>
-          <div key={item.tid} className="flex items-end space-y-3">
+        <div key={index}>
+          <div className="flex items-end space-y-3">
             <Avatar className="h-9 w-9">
               <AvatarFallback>{index + 1}</AvatarFallback>
             </Avatar>
@@ -33,7 +33,7 @@ export default function DeviceList({ data }: DeviceListProps) {
             </div>
           </div>
           <Separator className="my-2" />
-        </>
+        </div>
       ))}
       <ScrollBar orientation="horizontal" />
     </ScrollArea>

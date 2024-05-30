@@ -7,27 +7,34 @@ import { Badge } from '@/components/ui/badge';
 import { dashboard } from '@/api/dashboard';
 import type { ResultType } from '@/api/dashboard';
 import { Skeleton } from '@/components/ui/skeleton';
+import { auth } from '@/api/auth';
 
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<ResultType>();
+  const [data, setData] = useState<ResultType | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
+  const { checkRole } = auth();
   const { getStatictics } = dashboard();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchRoleAndData = async () => {
       try {
-        const data = await getStatictics();
-        setData(data);
+        const [role, statistics] = await Promise.all([
+          checkRole(),
+          getStatictics()
+        ]);
+        setRole(role);
+        setData(statistics);
       } catch (error) {
-        console.error('Failed to fetch statistics:', error);
+        console.error('Failed to fetch role or statistics:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
-    const intervalId = setInterval(fetchData, 1000 * 4);
+    fetchRoleAndData();
+    const intervalId = setInterval(fetchRoleAndData, 1000 * 4);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -44,7 +51,7 @@ export default function DashboardPage() {
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
         <div className="mb-2 flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">
-            Hi, Welcome back Admin
+            Hi, Welcome back <span className="capitalize">{role}</span>
           </h2>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

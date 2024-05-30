@@ -1,16 +1,25 @@
 import { useRouter } from '@/routes/hooks';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { auth } from '@/api/auth';
 
 export default function NoAuthRedirect() {
-  const { loggedIn } = auth();
-  console.log('login', loggedIn);
+  const { checkRole } = auth();
+  const [role, setRole] = useState(null);
   const router = useRouter();
+
   useEffect(() => {
-    if (!loggedIn) {
+    const getRole = async () => {
+      const role = await checkRole();
+      setRole(role);
+    };
+    getRole();
+  }, []);
+
+  useEffect(() => {
+    if (role !== 'admin' && role !== 'superadmin' && role !== null) {
       router.push('/login');
     }
-  });
+  }, [role, router]);
 
-  return <></>;
+  return null;
 }
