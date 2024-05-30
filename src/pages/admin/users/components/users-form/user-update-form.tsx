@@ -25,9 +25,8 @@ import {
 } from '@/components/ui/select';
 import { Edit } from 'lucide-react';
 import type { User } from '@/types/user';
-import useAuthStore from '@/stores/useAuthStore';
 import { useToast } from '@/components/ui/use-toast';
-import { update } from '@/api/users';
+import { users } from '@/api/users';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -51,8 +50,8 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({
   data
 }) => {
   const { toast } = useToast();
-  const { getToken } = useAuthStore();
   const [selectedRole, setSelectedRole] = useState<string>();
+  const { updateUser } = users();
   const form = useForm<UserFormSchemaType>({
     resolver: zodResolver(userFormSchema),
     defaultValues: {
@@ -60,11 +59,10 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({
       email_verified: data.email_verified
     }
   });
-  const token = getToken();
 
   const onSubmit = async (values: UserFormSchemaType) => {
     try {
-      const respone = await update(data.id, values, token);
+      const respone = await updateUser(data.id, values);
       console.log(respone);
       toast({
         title: 'Success',

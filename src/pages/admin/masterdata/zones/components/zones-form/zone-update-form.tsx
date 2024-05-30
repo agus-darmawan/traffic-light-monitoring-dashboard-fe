@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/card';
 import { Edit } from 'lucide-react';
 import type { Zones } from '@/types/zones';
-import useAuthStore from '@/stores/useAuthStore';
 import { useToast } from '@/components/ui/use-toast';
 import { update } from '@/api/zones';
 import { Input } from '@/components/ui/input';
@@ -39,19 +38,16 @@ const ZoneUpdateForm: React.FC<ZoneUpdateFormProps> = ({
   data
 }) => {
   const { toast } = useToast();
-  const { getToken } = useAuthStore();
   const form = useForm<ZoneFormSchemaType>({
     resolver: zodResolver(zoneFormSchema),
     defaultValues: {
       name: data.name
     }
   });
-  const token = getToken();
 
   const onSubmit = async (values: ZoneFormSchemaType) => {
     try {
-      const respone = await update(data.id, values, token);
-      console.log(respone);
+      await update(data.id, values);
       toast({
         title: 'Success',
         description: 'Zone have been updated successfully'

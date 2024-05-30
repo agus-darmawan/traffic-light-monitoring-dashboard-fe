@@ -25,15 +25,14 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Edit } from 'lucide-react';
-import useAuthStore from '@/stores/useAuthStore';
 import { useToast } from '@/components/ui/use-toast';
-import { store } from '@/api/devices';
 import type { Region } from '@/types/region';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Zones } from '@/types/zones';
 import { showByZone } from '@/api/regions';
+import { store } from '@/api/devices';
 
 const deviceFormSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
@@ -54,11 +53,9 @@ const DeviceCreateForm: React.FC<DeviceCreateFormProps> = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-  const { getToken } = useAuthStore();
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null);
   const [selectedRegionId, setSelectedRegionId] = useState<number | null>(null);
   const [regions, setRegions] = useState<Array<Region>>([]);
-  const token = getToken();
 
   const form = useForm<DeviceFormSchemaType>({
     resolver: zodResolver(deviceFormSchema)
@@ -66,7 +63,7 @@ const DeviceCreateForm: React.FC<DeviceCreateFormProps> = ({
 
   const onSubmit = async (values: DeviceFormSchemaType) => {
     try {
-      await store(values, token);
+      await store(values);
       toast({
         title: 'Success',
         description: 'Device has been register successfully'
@@ -84,8 +81,7 @@ const DeviceCreateForm: React.FC<DeviceCreateFormProps> = ({
       try {
         setLoading(true);
         const fetchedRegions = await showByZone(
-          selectedZoneId ? selectedZoneId : 0,
-          token
+          selectedZoneId ? selectedZoneId : 0
         );
         setRegions(fetchedRegions);
       } catch (error) {

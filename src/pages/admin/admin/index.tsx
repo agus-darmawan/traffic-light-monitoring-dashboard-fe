@@ -1,21 +1,19 @@
 import PageHead from '@/components/shared/page-head';
 import { useState, useEffect } from 'react';
-import useAuthStore from '@/stores/useAuthStore';
 import AdminsTable from './components';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
-import { index } from '@/api/users';
+import { users } from '@/api/users';
 import type { User } from '@/types/user';
 
 export default function AdminPage() {
+  const { getUsers } = users();
   const [isLoading, setIsLoading] = useState(true);
   const [admin, setAdmin] = useState<Array<User>>([]);
-  const { getToken } = useAuthStore();
-  const token = getToken();
 
   useEffect(() => {
-    const fetchZones = async () => {
+    const fetchAdmin = async () => {
       try {
-        const adminData = await index('admin', token);
+        const adminData = await getUsers('admin');
         setAdmin(adminData);
         setIsLoading(false);
       } catch (error) {
@@ -23,9 +21,8 @@ export default function AdminPage() {
         setIsLoading(false);
       }
     };
-
-    fetchZones();
-  }, [token]);
+    fetchAdmin();
+  });
 
   if (isLoading) {
     return (

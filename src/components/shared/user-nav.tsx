@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import useAuthStore from '@/stores/useAuthStore';
-import { logout } from '@/api/auth';
+import { deleteCookie } from '@/lib/cookies';
+import { auth } from '@/api/auth';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,11 +11,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export default function UserNav() {
-  const { getToken, removeToken } = useAuthStore();
+  const { logout } = auth();
   const handleLogout = async () => {
-    const token = getToken();
-    await logout(token);
-    removeToken();
+    await logout();
+    deleteCookie('auth.__token');
     window.location.reload();
   };
 

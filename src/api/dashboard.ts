@@ -17,16 +17,16 @@ export interface ResultType {
   };
 }
 
-export const index = async (token: string): Promise<ResultType> => {
-  try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    const response = await axios.get('dashboard', config);
-    return response.data.data;
-  } catch (error) {
-    throw error;
-  }
+export const dashboard = () => {
+  const getStatictics = async (): Promise<ResultType> => {
+    try {
+      const response = await axios.get('dashboard');
+      return response.data.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  return {
+    getStatictics
+  };
 };

@@ -2,7 +2,6 @@ import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
 import ZoneUpdateForm from '../zones-form/zone-update-form';
 import { useToast } from '@/components/ui/use-toast';
-import useAuthStore from '@/stores/useAuthStore';
 import type { Zones } from '@/types/zones';
 import { destroy } from '@/api/zones';
 import { Edit, Trash } from 'lucide-react';
@@ -15,14 +14,13 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { toast } = useToast();
-  const { getToken } = useAuthStore();
   const [loading] = useState(false);
   const [open, setOpen] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
 
   const onConfirm = async () => {
     try {
-      await destroy(data.id, getToken());
+      await destroy(data.id);
       toast({
         title: 'Success',
         description: 'Zones have been deleted'

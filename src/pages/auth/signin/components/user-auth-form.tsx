@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { AxiosError } from 'axios';
 import {
   Form,
   FormControl,
@@ -13,10 +12,9 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { register as registerUser } from '@/api/auth';
+import { auth } from '@/api/auth';
 import { useState } from 'react';
 import { useRouter } from '@/routes/hooks';
-import { useToast } from '@/components/ui/use-toast';
 
 const formSchema = z
   .object({
@@ -24,11 +22,11 @@ const formSchema = z
     password: z
       .string()
       .min(8, { message: 'Password must be at least 8 characters' }),
-    passwordConfirmation: z
+    password_confirmation: z
       .string()
       .min(8, { message: 'Password must be at least 8 characters' })
   })
-  .refine((data) => data.password === data.passwordConfirmation, {
+  .refine((data) => data.password === data.password_confirmation, {
     message: 'Passwords must match',
     path: ['passwordConfirmation']
   });
@@ -36,14 +34,14 @@ const formSchema = z
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
-  const { toast } = useToast();
+  const { register } = auth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const defaultValues = {
     email: '',
     password: '',
-    passwordConfirmation: ''
+    password_confirmation: ''
   };
 
   const form = useForm<UserFormValue>({
@@ -52,26 +50,12 @@ export default function UserAuthForm() {
   });
 
   const onSubmit = async (data: UserFormValue) => {
-    setLoading(true);
     try {
-      await registerUser(data.email, data.password, data.passwordConfirmation);
-      toast({
-        title: 'Register Success',
-        description: 'Congratulations, you have registered please Login'
-      });
+      setLoading(true);
+      await register(data);
       router.push('/login');
     } catch (error) {
-      if (
-        error instanceof AxiosError &&
-        error.response &&
-        error.response.status === 409
-      ) {
-        toast({
-          title: 'Email already taken',
-          description:
-            'The email address you entered is already registered. Please use a different email address.'
-        });
-      }
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -117,7 +101,7 @@ export default function UserAuthForm() {
         />
         <FormField
           control={form.control}
-          name="passwordConfirmation"
+          name="password_confirmation"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>

@@ -1,6 +1,5 @@
 import PageHead from '@/components/shared/page-head';
 import { useState, useEffect } from 'react';
-import useAuthStore from '@/stores/useAuthStore';
 import RegionTable from './components/regions-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { index } from '@/api/regions';
@@ -10,14 +9,12 @@ export default function ZonesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [regions, setRegions] = useState([]);
   const [zones, setZones] = useState([]);
-  const { getToken } = useAuthStore();
-  const token = getToken();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const regionsData = await index(token);
-        const zonesData = await indexZone(token);
+        const regionsData = await index();
+        const zonesData = await indexZone();
         setRegions(regionsData);
         setZones(zonesData);
         setIsLoading(false);
@@ -28,7 +25,7 @@ export default function ZonesPage() {
     };
 
     fetchData();
-  }, [token]);
+  }, []);
 
   if (isLoading) {
     return (

@@ -25,7 +25,6 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Edit } from 'lucide-react';
-import useAuthStore from '@/stores/useAuthStore';
 import { useToast } from '@/components/ui/use-toast';
 import { update } from '@/api/devices';
 import type { Region } from '@/types/region';
@@ -56,7 +55,6 @@ const DeviceUpdateForm: React.FC<DeviceUpdateFormProps> = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-  const { getToken } = useAuthStore();
   const [zones, setZones] = useState<Zones[]>([]);
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(
     device.zone_id
@@ -65,7 +63,6 @@ const DeviceUpdateForm: React.FC<DeviceUpdateFormProps> = ({
     device.region_id
   );
   const [regions, setRegions] = useState<Array<Region>>([]);
-  const token = getToken();
 
   const form = useForm<DeviceFormSchemaType>({
     resolver: zodResolver(deviceFormSchema),
@@ -78,7 +75,7 @@ const DeviceUpdateForm: React.FC<DeviceUpdateFormProps> = ({
 
   const onSubmit = async (values: DeviceFormSchemaType) => {
     try {
-      await update(device.id, values, token);
+      await update(device.id, values);
       toast({
         title: 'Success',
         description: 'Device has been update successfully'
@@ -95,11 +92,10 @@ const DeviceUpdateForm: React.FC<DeviceUpdateFormProps> = ({
     const fetchRegion = async () => {
       try {
         setLoading(true);
-        const fetchedZones = await index(token);
+        const fetchedZones = await index();
         setZones(fetchedZones);
         const fetchedRegions = await showByZone(
-          selectedZoneId ? selectedZoneId : 0,
-          token
+          selectedZoneId ? selectedZoneId : 0
         );
         setRegions(fetchedRegions);
       } catch (error) {

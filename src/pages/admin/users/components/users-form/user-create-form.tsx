@@ -14,9 +14,8 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Edit } from 'lucide-react';
-import useAuthStore from '@/stores/useAuthStore';
 import { useToast } from '@/components/ui/use-toast';
-import { store } from '@/api/users';
+import { users } from '@/api/users';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -29,17 +28,16 @@ const userFormSchema = z.object({
 type UserFormSchemaType = z.infer<typeof userFormSchema>;
 
 const UserCreateForm = ({ modalClose }: { modalClose: () => void }) => {
+  const { postUser } = users();
   const { toast } = useToast();
-  const { getToken } = useAuthStore();
   const form = useForm<UserFormSchemaType>({
     resolver: zodResolver(userFormSchema),
     defaultValues: {}
   });
-  const token = getToken();
 
   const onSubmit = async (values: UserFormSchemaType) => {
     try {
-      await store(values, token);
+      await postUser(values);
       toast({
         title: 'Success',
         description: 'Zone have been created successfully'

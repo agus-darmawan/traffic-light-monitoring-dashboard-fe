@@ -1,36 +1,35 @@
 import { useState, useEffect } from 'react';
-import useAuthStore from '@/stores/useAuthStore';
 import PageHead from '@/components/shared/page-head.jsx';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Cpu, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import DeviceList from './components/device-list';
 import { Badge } from '@/components/ui/badge';
-import { index } from '@/api/dashboard';
+import { dashboard } from '@/api/dashboard';
 import type { ResultType } from '@/api/dashboard';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const { getToken } = useAuthStore();
   const [data, setData] = useState<ResultType>();
-  const token = getToken();
+
+  const { getStatictics } = dashboard();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await index(token);
+        const data = await getStatictics();
         setData(data);
-        console.log(data);
       } catch (error) {
-        console.error('Error fetching error:', error);
-        setIsLoading(false);
+        console.error('Failed to fetch statistics:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [token]);
+    const intervalId = setInterval(fetchData, 1000 * 4);
+    return () => clearInterval(intervalId);
+  }, []);
 
   if (isLoading) {
     return (

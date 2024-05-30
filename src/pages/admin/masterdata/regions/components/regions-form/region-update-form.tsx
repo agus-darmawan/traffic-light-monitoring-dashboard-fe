@@ -24,7 +24,6 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Edit } from 'lucide-react';
-import useAuthStore from '@/stores/useAuthStore';
 import { useToast } from '@/components/ui/use-toast';
 import { update } from '@/api/regions';
 import { Input } from '@/components/ui/input';
@@ -53,7 +52,6 @@ const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
   data
 }) => {
   const { toast } = useToast();
-  const { getToken } = useAuthStore();
   const [zones, setZones] = useState<Zones[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTimezone, setSelectedTimezone] = useState<string | null>(
@@ -62,7 +60,6 @@ const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(
     data.zone_id
   );
-  const token = getToken();
 
   const form = useForm<RegionFormSchemaType>({
     resolver: zodResolver(regionFormSchema),
@@ -75,7 +72,7 @@ const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
 
   const onSubmit = async (values: RegionFormSchemaType) => {
     try {
-      await update(data.id, values, token);
+      await update(data.id, values);
       toast({
         title: 'Success',
         description: 'Region has been updated successfully'
@@ -93,7 +90,7 @@ const RegionUpdateForm: React.FC<RegionUpdateFormProps> = ({
     const fetchZones = async () => {
       try {
         setLoading(true);
-        const fetchedZones = await index(token);
+        const fetchedZones = await index();
         setZones(fetchedZones);
         setLoading(false);
       } catch (error) {

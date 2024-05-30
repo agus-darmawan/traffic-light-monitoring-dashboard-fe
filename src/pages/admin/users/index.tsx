@@ -1,21 +1,19 @@
 import PageHead from '@/components/shared/page-head';
 import { useState, useEffect } from 'react';
-import useAuthStore from '@/stores/useAuthStore';
 import UserTable from './components/users-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
-import { index } from '@/api/users';
+import { users as usersApi } from '@/api/users';
 import type { User } from '@/types/user';
 
 export default function UserPage() {
+  const { getUsers } = usersApi();
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState<Array<User>>([]);
-  const { getToken } = useAuthStore();
-  const token = getToken();
 
   useEffect(() => {
-    const fetchZones = async () => {
+    const fetchData = async () => {
       try {
-        const usersData = await index('user', token);
+        const usersData = await getUsers('user');
         setUsers(usersData);
         setIsLoading(false);
       } catch (error) {
@@ -23,9 +21,8 @@ export default function UserPage() {
         setIsLoading(false);
       }
     };
-
-    fetchZones();
-  }, [token]);
+    fetchData();
+  });
 
   if (isLoading) {
     return (

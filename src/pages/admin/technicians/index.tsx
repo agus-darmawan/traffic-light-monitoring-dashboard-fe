@@ -1,21 +1,19 @@
 import PageHead from '@/components/shared/page-head';
 import { useState, useEffect } from 'react';
-import useAuthStore from '@/stores/useAuthStore';
 import TechniciansTable from './components';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
-import { index } from '@/api/users';
+import { users } from '@/api/users';
 import type { User } from '@/types/user';
 
 export default function TechniciansPage() {
+  const { getUsers } = users();
   const [isLoading, setIsLoading] = useState(true);
   const [technicians, setTechnicians] = useState<Array<User>>([]);
-  const { getToken } = useAuthStore();
-  const token = getToken();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const technisiansData = await index('technician', token);
+        const technisiansData = await getUsers('technician');
         setTechnicians(technisiansData);
         setIsLoading(false);
       } catch (error) {
@@ -25,7 +23,7 @@ export default function TechniciansPage() {
     };
 
     fetchData();
-  }, [token]);
+  });
 
   if (isLoading) {
     return (

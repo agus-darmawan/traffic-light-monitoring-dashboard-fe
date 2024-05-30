@@ -1,13 +1,8 @@
 import axios from '@/lib/axios';
 
-export const index = async (token: string) => {
+export const index = async () => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    const response = await axios.get('regions', config);
+    const response = await axios.get('regions');
     return response.data.data;
   } catch (error) {
     throw error;
@@ -16,54 +11,34 @@ export const index = async (token: string) => {
 
 export const show = async (id: number, token: string) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    const response = await axios.get(`regions/${id}`, config);
+    const response = await axios.get(`regions/${id}`);
     return response.data.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const showByZone = async (zone_id: number, token: string) => {
+export const showByZone = async (zone_id: number) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    const response = await axios.get(`regions/zone/${zone_id}`, config);
+    const response = await axios.get(`regions/zone/${zone_id}`);
     return response.data.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const store = async (regionData: any, token: string) => {
+export const store = async (regionData: any) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    const response = await axios.post('regions', regionData, config);
+    const response = await axios.post('regions', regionData);
     return response.data.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const update = async (id: number, regionData: any, token: string) => {
+export const update = async (id: number, regionData: any) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    const response = await axios.patch(`regions/${id}`, regionData, config);
+    const response = await axios.patch(`regions/${id}`, regionData);
     console.log(response);
     return response.data.data;
   } catch (error) {
@@ -71,14 +46,9 @@ export const update = async (id: number, regionData: any, token: string) => {
   }
 };
 
-export const destroy = async (id: number, token: string) => {
+export const destroy = async (id: number) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    await axios.delete(`regions/${id}`, config);
+    await axios.delete(`regions/${id}`);
     return true;
   } catch (error) {
     throw error;

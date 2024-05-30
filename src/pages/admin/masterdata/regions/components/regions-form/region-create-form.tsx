@@ -25,7 +25,6 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Edit } from 'lucide-react';
-import useAuthStore from '@/stores/useAuthStore';
 import { useToast } from '@/components/ui/use-toast';
 import { store } from '@/api/regions';
 import { useForm } from 'react-hook-form';
@@ -51,10 +50,8 @@ const RegionCreateForm: React.FC<RegionCreateFormProps> = ({
   zones
 }) => {
   const { toast } = useToast();
-  const { getToken } = useAuthStore();
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null);
   const [selectedTimezone, setSelectedTimezone] = useState<string | null>(null);
-  const token = getToken();
 
   const form = useForm<RegionFormSchemaType>({
     resolver: zodResolver(regionFormSchema)
@@ -62,7 +59,7 @@ const RegionCreateForm: React.FC<RegionCreateFormProps> = ({
 
   const onSubmit = async (values: RegionFormSchemaType) => {
     try {
-      await store(values, token);
+      await store(values);
       toast({
         title: 'Success',
         description: 'Region has been created successfully'

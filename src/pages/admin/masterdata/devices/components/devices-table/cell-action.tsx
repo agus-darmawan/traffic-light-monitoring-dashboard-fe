@@ -2,7 +2,6 @@ import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
 import DeviceUpdateForm from '../devices-form/device-update-form';
 import { useToast } from '@/components/ui/use-toast';
-import useAuthStore from '@/stores/useAuthStore';
 import type { Device } from '@/types/devices';
 import { destroy } from '@/api/regions';
 import { Edit, Trash } from 'lucide-react';
@@ -15,14 +14,13 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ device }) => {
   const { toast } = useToast();
-  const { getToken } = useAuthStore();
   const [loading] = useState(false);
   const [open, setOpen] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
 
   const onConfirm = async () => {
     try {
-      await destroy(device.id, getToken());
+      await destroy(device.id);
       toast({
         title: 'Success',
         description: 'Region have been deleted'

@@ -1,6 +1,5 @@
 import PageHead from '@/components/shared/page-head';
 import { useState, useEffect } from 'react';
-import useAuthStore from '@/stores/useAuthStore';
 import DeviceTable from './components/devices-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { index as indexZone } from '@/api/zones';
@@ -10,14 +9,14 @@ export default function DevicesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [zones, setZones] = useState([]);
   const [devices, setDevices] = useState([]);
-  const { getToken } = useAuthStore();
-  const token = getToken();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const devicesData = await index(token);
-        const zonesData = await indexZone(token);
+        const [devicesData, zonesData] = await Promise.all([
+          index(),
+          indexZone()
+        ]);
         setDevices(devicesData);
         setZones(zonesData);
         setIsLoading(false);
@@ -28,7 +27,7 @@ export default function DevicesPage() {
     };
 
     fetchData();
-  }, [token]);
+  }, []);
 
   if (isLoading) {
     return (

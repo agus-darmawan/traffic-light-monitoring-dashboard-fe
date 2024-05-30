@@ -36,6 +36,7 @@ export default function StudentPage() {
         totalUsers={totalUsers}
         pageCount={pageCount}
       />
+      qs
     </div>
   );
 }

@@ -1,14 +1,13 @@
-import useAuthStore from '@/stores/useAuthStore';
 import { useRouter } from '@/routes/hooks';
 import { useEffect } from 'react';
+import { auth } from '@/api/auth';
 
 export default function NoAuthRedirect() {
-  const { getToken } = useAuthStore();
+  const { loggedIn } = auth();
+  console.log('login', loggedIn);
   const router = useRouter();
-  const token = getToken();
   useEffect(() => {
-    console.log('TRiggered redirect', token);
-    if (!token) {
+    if (!loggedIn) {
       router.push('/login');
     }
   });

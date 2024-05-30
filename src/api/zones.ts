@@ -1,55 +1,35 @@
 import axios from '@/lib/axios';
 
-export const index = async (token: string) => {
+export const index = async () => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    const response = await axios.get('zones', config);
+    const response = await axios.get('zones');
     return response.data.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const show = async (id: number, token: string) => {
+export const show = async (id: number) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    const response = await axios.get(`zones/${id}`, config);
+    const response = await axios.get(`zones/${id}`);
     return response.data.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const store = async (zoneData: any, token: string) => {
+export const store = async (zoneData: any) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    const response = await axios.post('zones', zoneData, config);
+    const response = await axios.post('zones', zoneData);
     return response.data.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const update = async (id: number, zoneData: any, token: string) => {
+export const update = async (id: number, zoneData: any) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    const response = await axios.patch(`zones/${id}`, zoneData, config);
+    const response = await axios.patch(`zones/${id}`, zoneData);
     console.log(response);
     return response.data.data;
   } catch (error) {
@@ -57,14 +37,9 @@ export const update = async (id: number, zoneData: any, token: string) => {
   }
 };
 
-export const destroy = async (id: number, token: string) => {
+export const destroy = async (id: number) => {
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-    await axios.delete(`zones/${id}`, config);
+    await axios.delete(`zones/${id}`);
     return true;
   } catch (error) {
     throw error;

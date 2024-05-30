@@ -1,10 +1,24 @@
-import axios from 'axios';
+import { getCookie } from '@/lib/cookies';
+import Axios from 'axios';
 
-const instance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_BASE_API,
-  headers: {
-    'Content-Type': 'application/json'
-  }
+const isServer = typeof window === 'undefined';
+
+const axios = Axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_BASE_API
 });
 
-export default instance;
+axios.interceptors.request.use(async (config) => {
+  let token = null;
+
+  if (isServer) {
+    token = getCookie('auth.__token');
+  } else {
+    token = getCookie('auth.__token');
+  }
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+export default axios;

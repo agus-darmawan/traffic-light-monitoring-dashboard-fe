@@ -2,9 +2,8 @@ import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
 import UserUpdateForm from '../users-form/user-update-form';
 import { useToast } from '@/components/ui/use-toast';
-import useAuthStore from '@/stores/useAuthStore';
 import type { User } from '@/types/user';
-import { destroy } from '@/api/users';
+import { users } from '@/api/users';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { Modal } from '@/components/ui/modal';
@@ -15,14 +14,14 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { toast } = useToast();
-  const { getToken } = useAuthStore();
   const [loading] = useState(false);
   const [open, setOpen] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
+  const { deleteUser } = users();
 
   const onConfirm = async () => {
     try {
-      await destroy(data.id, getToken());
+      await deleteUser(data.id);
       toast({
         title: 'Success',
         description: 'User have been deleted'

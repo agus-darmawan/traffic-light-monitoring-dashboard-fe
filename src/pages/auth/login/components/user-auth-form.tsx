@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { AxiosError } from 'axios';
 import {
   Form,
   FormControl,
@@ -13,10 +12,9 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { login as loginUser } from '@/api/auth';
+import { auth } from '@/api/auth';
 import { useState } from 'react';
 import { useRouter } from '@/routes/hooks';
-import { useToast } from '@/components/ui/use-toast';
 
 const formLoginSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
@@ -28,7 +26,7 @@ const formLoginSchema = z.object({
 type UserFormValue = z.infer<typeof formLoginSchema>;
 
 export default function UserAuthForm() {
-  const { toast } = useToast();
+  const { login } = auth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -45,19 +43,10 @@ export default function UserAuthForm() {
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true);
     try {
-      await loginUser(data.email, data.password);
-      toast({
-        title: 'Login Success',
-        description: 'Congratulations, you have login'
-      });
+      await login(data);
       router.push('/');
     } catch (error) {
-      if (error instanceof AxiosError && error.response) {
-        toast({
-          title: 'Login Failed',
-          description: 'Please check your email and password'
-        });
-      }
+      setLoading(false);
     } finally {
       setLoading(false);
     }

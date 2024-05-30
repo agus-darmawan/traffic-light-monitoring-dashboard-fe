@@ -1,10 +1,9 @@
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import useAuthStore from '@/stores/useAuthStore';
 import { Eye } from 'lucide-react';
 import type { User } from '@/types/user';
-import { update } from '@/api/users';
+import { users } from '@/api/users';
 import { Trash } from 'lucide-react';
 import { useState } from 'react';
 
@@ -13,8 +12,8 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const { updateUser } = users();
   const { toast } = useToast();
-  const { getToken } = useAuthStore();
   const [loading] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -24,7 +23,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         email: data.email,
         role: 'user'
       };
-      await update(data.id, newdata, getToken());
+      await updateUser(data.id, newdata);
       toast({
         title: 'Success',
         description: 'Admin have been removed and now will be as user'
