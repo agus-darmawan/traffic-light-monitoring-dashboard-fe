@@ -13,7 +13,10 @@ const useAuthStore = create<IAuthState>()(
     (set, get) => ({
       token: '',
       setToken: (token: string) => set({ token }),
-      removeToken: () => set({ token: '' }),
+      removeToken: () => {
+        set({ token: '' });
+        localStorage.removeItem('auth.__token');
+      },
       getToken: () => get().token
     }),
     {

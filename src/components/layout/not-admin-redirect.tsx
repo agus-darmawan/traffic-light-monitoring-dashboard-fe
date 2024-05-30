@@ -7,6 +7,7 @@ export default function NoAuthRedirect() {
   const router = useRouter();
   const token = getToken();
   useEffect(() => {
+    console.log('TRiggered redirect', token);
     if (!token) {
       router.push('/login');
     }
