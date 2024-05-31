@@ -32,7 +32,6 @@ export default function DashboardPage() {
         setIsLoading(false);
       }
     };
-
     fetchRoleAndData();
     const intervalId = setInterval(fetchRoleAndData, 1000 * 4);
     return () => clearInterval(intervalId);
