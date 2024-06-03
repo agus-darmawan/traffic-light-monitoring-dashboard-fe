@@ -23,7 +23,7 @@ export default function UserPage() {
       }
     };
     fetchData();
-  });
+  }, []);
 
   if (isLoading) {
     return (

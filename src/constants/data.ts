@@ -3,43 +3,43 @@ import { NavItem } from '@/types';
 export const navItems: NavItem[] = [
   {
     title: 'Dashboard',
-    href: '/',
+    href: '/admin',
     icon: 'dashboard',
     label: 'Dashboard'
   },
   {
     title: 'Zones Data and Status',
-    href: '/zones',
+    href: '/admin/zones',
     icon: 'globe',
     label: 'Zones'
   },
   {
     title: 'Regions Data and Status',
-    href: '/regions',
+    href: '/admin/regions',
     icon: 'map',
     label: 'Regions'
   },
   {
     title: 'Devices Data and Status',
-    href: '/devices',
+    href: '/admin/devices',
     icon: 'cpu',
     label: 'Devices'
   },
   {
     title: 'Users',
-    href: '/users',
+    href: '/admin/users',
     icon: 'user',
     label: 'Users'
   },
   {
     title: 'Technicians',
-    href: '/technicians',
+    href: '/admin/technicians',
     icon: 'technicians',
     label: 'Technicians'
   },
   {
     title: 'Administrator',
-    href: '/admin',
+    href: '/admin/admin',
     icon: 'admin',
     label: 'Administrator'
   }

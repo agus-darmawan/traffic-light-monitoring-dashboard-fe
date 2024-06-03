@@ -24,6 +24,7 @@ export default function Sidebar() {
       if (item.title === 'Administrator' && role !== 'superadmin') {
         return false;
       }
+      if (role === 'technician' && item.title !== 'My Device') return false;
       return true;
     });
     setNavItems(filteredNavItems);

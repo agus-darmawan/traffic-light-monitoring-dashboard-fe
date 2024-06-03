@@ -24,7 +24,7 @@ export default function TechniciansPage() {
     };
 
     fetchData();
-  });
+  }, []);
 
   if (isLoading) {
     return (

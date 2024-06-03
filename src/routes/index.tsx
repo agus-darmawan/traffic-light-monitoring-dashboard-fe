@@ -6,8 +6,6 @@ const DashboardLayout = lazy(
   () => import('@/components/layout/dashboard-layout')
 );
 
-const RoleProvider = lazy(() => import('@/providers/role-provider'));
-
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const LoginPage = lazy(() => import('@/pages/auth/login'));
 const ForgotPasswordPage = lazy(() => import('@/pages/auth/forgot-password'));
@@ -18,6 +16,7 @@ const DevicesPage = lazy(() => import('@/pages/admin/masterdata/devices'));
 const UsersPage = lazy(() => import('@/pages/admin/users'));
 const AdminPage = lazy(() => import('@/pages/admin/admin'));
 const TechniciansPage = lazy(() => import('@/pages/admin/technicians'));
+// const TechnicianPage = lazy(() => import('@/pages/technicians'));
 
 // ---------------------------------------------------
 
@@ -26,7 +25,7 @@ const TechniciansPage = lazy(() => import('@/pages/admin/technicians'));
 export default function AppRouter() {
   const dashboardRoutes = [
     {
-      path: '/',
+      path: '/admin',
       element: (
         <DashboardLayout>
           <Suspense>
@@ -67,6 +66,13 @@ export default function AppRouter() {
     }
   ];
 
+  const technicianRoutes = [
+    {
+      path: '/technicians'
+      // element: <DashboardLayout>{/* <TechnicianPage /> */}</DashboardLayout>
+    }
+  ];
+
   const publicRoutes = [
     {
       path: '/register',
@@ -94,7 +100,11 @@ export default function AppRouter() {
     }
   ];
 
-  const routes = useRoutes([...dashboardRoutes, ...publicRoutes]);
+  const routes = useRoutes([
+    ...dashboardRoutes,
+    ...publicRoutes,
+    ...technicianRoutes
+  ]);
 
   return routes;
 }
