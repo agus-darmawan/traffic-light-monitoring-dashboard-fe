@@ -4,6 +4,7 @@ import RegionTable from './components/regions-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { index } from '@/api/regions';
 import { index as indexZone } from '@/api/zones';
+import RoleProvider from '@/providers/role-provider';
 
 export default function ZonesPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -36,9 +37,11 @@ export default function ZonesPage() {
   }
 
   return (
-    <div className="p-5">
-      <PageHead title="Regions | MasterData" />
-      <RegionTable regions={regions} pageCount={1} page={0} zones={zones} />
-    </div>
+    <RoleProvider allowedRole="admin">
+      <div className="p-5">
+        <PageHead title="Regions | MasterData" />
+        <RegionTable regions={regions} pageCount={1} page={0} zones={zones} />
+      </div>
+    </RoleProvider>
   );
 }

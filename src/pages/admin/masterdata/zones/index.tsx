@@ -4,6 +4,7 @@ import ZoneTable from './components/zones-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { index } from '@/api/zones';
 import type { Zones } from '@/types/zones';
+import RoleProvider from '@/providers/role-provider';
 
 export default function ZonesPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -33,9 +34,11 @@ export default function ZonesPage() {
   }
 
   return (
-    <div className="p-5">
-      <PageHead title="Zone | MasterData" />
-      <ZoneTable zones={zones} pageCount={1} page={0} />
-    </div>
+    <RoleProvider allowedRole="admin">
+      <div className="p-5">
+        <PageHead title="Zone | MasterData" />
+        <ZoneTable zones={zones} pageCount={1} page={0} />
+      </div>
+    </RoleProvider>
   );
 }

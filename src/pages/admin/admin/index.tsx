@@ -4,6 +4,7 @@ import AdminsTable from './components';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { users } from '@/api/users';
 import type { User } from '@/types/user';
+import RoleProvider from '@/providers/role-provider';
 
 export default function AdminPage() {
   const { getUsers } = users();
@@ -33,9 +34,11 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="p-5">
-      <PageHead title="Zone | MasterData" />
-      <AdminsTable admins={admin} pageCount={1} page={0} />
-    </div>
+    <RoleProvider allowedRole="superadmin">
+      <div className="p-5">
+        <PageHead title="Zone | MasterData" />
+        <AdminsTable admins={admin} pageCount={1} page={0} />
+      </div>
+    </RoleProvider>
   );
 }

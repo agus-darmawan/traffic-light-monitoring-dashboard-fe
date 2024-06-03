@@ -4,6 +4,7 @@ import UserTable from './components/users-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { users as usersApi } from '@/api/users';
 import type { User } from '@/types/user';
+import RoleProvider from '@/providers/role-provider';
 
 export default function UserPage() {
   const { getUsers } = usersApi();
@@ -33,9 +34,11 @@ export default function UserPage() {
   }
 
   return (
-    <div className="p-5">
-      <PageHead title="Zone | MasterData" />
-      <UserTable users={users} pageCount={1} page={0} />
-    </div>
+    <RoleProvider allowedRole="admin">
+      <div className="p-5">
+        <PageHead title="Zone | MasterData" />
+        <UserTable users={users} pageCount={1} page={0} />
+      </div>
+    </RoleProvider>
   );
 }

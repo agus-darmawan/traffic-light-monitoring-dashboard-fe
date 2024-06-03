@@ -8,6 +8,7 @@ import { dashboard } from '@/api/dashboard';
 import type { ResultType } from '@/api/dashboard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { auth } from '@/api/auth';
+import RoleProvider from '@/providers/role-provider';
 
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -45,7 +46,7 @@ export default function DashboardPage() {
     );
   }
   return (
-    <>
+    <RoleProvider allowedRole="admin">
       <PageHead title="Dashboard | App" />
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
         <div className="mb-2 flex items-center justify-between space-y-2">
@@ -131,6 +132,6 @@ export default function DashboardPage() {
           </Card>
         </div>
       </div>
-    </>
+    </RoleProvider>
   );
 }

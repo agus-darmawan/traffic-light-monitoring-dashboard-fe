@@ -4,6 +4,7 @@ import DeviceTable from './components/devices-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { index as indexZone } from '@/api/zones';
 import { index } from '@/api/devices';
+import RoleProvider from '@/providers/role-provider';
 
 export default function DevicesPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -38,9 +39,11 @@ export default function DevicesPage() {
   }
 
   return (
-    <div className="p-5">
-      <PageHead title="Devices| MasterData" />
-      <DeviceTable devices={devices} pageCount={1} page={0} zones={zones} />
-    </div>
+    <RoleProvider allowedRole="admin">
+      <div className="p-5">
+        <PageHead title="Devices| MasterData" />
+        <DeviceTable devices={devices} pageCount={1} page={0} zones={zones} />
+      </div>
+    </RoleProvider>
   );
 }

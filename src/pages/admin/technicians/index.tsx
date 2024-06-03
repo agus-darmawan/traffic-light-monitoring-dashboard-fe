@@ -4,6 +4,7 @@ import TechniciansTable from './components';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { users } from '@/api/users';
 import type { User } from '@/types/user';
+import RoleProvider from '@/providers/role-provider';
 
 export default function TechniciansPage() {
   const { getUsers } = users();
@@ -34,9 +35,11 @@ export default function TechniciansPage() {
   }
 
   return (
-    <div className="p-5">
-      <PageHead title="Zone | MasterData" />
-      <TechniciansTable technicians={technicians} pageCount={1} page={0} />
-    </div>
+    <RoleProvider allowedRole="admin">
+      <div className="p-5">
+        <PageHead title="Zone | MasterData" />
+        <TechniciansTable technicians={technicians} pageCount={1} page={0} />
+      </div>
+    </RoleProvider>
   );
 }
