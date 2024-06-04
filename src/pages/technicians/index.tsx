@@ -2,19 +2,15 @@ import { useState, useEffect } from 'react';
 import PageHead from '@/components/shared/page-head.jsx';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Cpu, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
-import { dashboard } from '@/api/dashboard';
-import type { ResultType } from '@/api/dashboard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { auth } from '@/api/auth';
 import RoleProvider from '@/providers/role-provider';
 
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<ResultType | null>(null);
   const [role, setRole] = useState<string | null>(null);
 
   const { checkRole } = auth();
-  const { getStatictics } = dashboard();
 
   useEffect(() => {
     const fetchRoleAndData = async () => {
@@ -55,7 +51,7 @@ export default function DashboardPage() {
               <Cpu />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{data?.all_devices}</div>
+              <div className="text-2xl font-bold">10</div>
             </CardContent>
           </Card>
           <Card>
@@ -66,7 +62,7 @@ export default function DashboardPage() {
               <CheckCircle />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{data?.active.count}</div>
+              <div className="text-2xl font-bold">10</div>
             </CardContent>
           </Card>
           <Card>
@@ -77,7 +73,7 @@ export default function DashboardPage() {
               <AlertCircle />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{data?.issue.count}</div>
+              <div className="text-2xl font-bold">10</div>
             </CardContent>
           </Card>
           <Card>
@@ -88,7 +84,7 @@ export default function DashboardPage() {
               <XCircle />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{data?.problem.count}</div>
+              <div className="text-2xl font-bold">10</div>
             </CardContent>
           </Card>
         </div>

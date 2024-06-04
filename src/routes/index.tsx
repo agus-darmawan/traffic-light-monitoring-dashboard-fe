@@ -16,7 +16,8 @@ const DevicesPage = lazy(() => import('@/pages/admin/masterdata/devices'));
 const UsersPage = lazy(() => import('@/pages/admin/users'));
 const AdminPage = lazy(() => import('@/pages/admin/admin'));
 const TechniciansPage = lazy(() => import('@/pages/admin/technicians'));
-// const TechnicianPage = lazy(() => import('@/pages/technicians'));
+const TechnicianPage = lazy(() => import('@/pages/technicians'));
+const HomePage = lazy(() => import('@/pages/home/index'));
 
 // ---------------------------------------------------
 
@@ -68,12 +69,21 @@ export default function AppRouter() {
 
   const technicianRoutes = [
     {
-      path: '/technicians'
-      // element: <DashboardLayout>{/* <TechnicianPage /> */}</DashboardLayout>
+      path: '/technicians',
+      element: (
+        <DashboardLayout>
+          <TechnicianPage />
+        </DashboardLayout>
+      )
     }
   ];
 
   const publicRoutes = [
+    {
+      path: '/',
+      element: <HomePage />,
+      index: true
+    },
     {
       path: '/register',
       element: <SignInPage />,
