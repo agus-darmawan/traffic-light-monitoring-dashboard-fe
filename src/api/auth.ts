@@ -13,6 +13,7 @@ export const auth = () => {
       const { data } = await axios.post('/auth/login', params);
       console.log(data.data.token);
       setCookie('auth.__token', data.data.token);
+      return data.data.role;
     } catch (e) {
       throw e;
     }

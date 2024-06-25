@@ -17,7 +17,6 @@ const UsersPage = lazy(() => import('@/pages/admin/users'));
 const AdminPage = lazy(() => import('@/pages/admin/admin'));
 const TechniciansPage = lazy(() => import('@/pages/admin/technicians'));
 const TechnicianPage = lazy(() => import('@/pages/technicians'));
-const HomePage = lazy(() => import('@/pages/home/index'));
 
 // ---------------------------------------------------
 
@@ -81,23 +80,16 @@ export default function AppRouter() {
   const publicRoutes = [
     {
       path: '/',
-      element: <HomePage />,
-      index: true
-    },
-    {
-      path: '/register',
-      element: <SignInPage />,
-      index: true
-    },
-    {
-      path: '/login',
       element: <LoginPage />,
       index: true
     },
     {
+      path: '/register',
+      element: <SignInPage />
+    },
+    {
       path: '/forgotPassword',
-      element: <ForgotPasswordPage />,
-      index: true
+      element: <ForgotPasswordPage />
     },
 
     {

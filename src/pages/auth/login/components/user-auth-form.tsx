@@ -43,8 +43,10 @@ export default function UserAuthForm() {
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true);
     try {
-      await login(data);
-      router.push('/');
+      const role = await login(data);
+      role === 'admin' || role === 'superadmin'
+        ? router.push('/admin')
+        : router.push('/technicians');
     } catch (error) {
       setLoading(false);
     } finally {

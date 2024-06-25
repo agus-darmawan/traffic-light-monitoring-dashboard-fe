@@ -34,11 +34,10 @@ const NoAdminRedirect: React.FC<IRoleProps> = ({ allowedRole }) => {
       role !== allowedRole &&
       role !== 'superadmin'
     ) {
-      router.push('/login');
+      router.push('/');
     }
   }, [role, allowedRole, router, loading]);
 
-  // Ensure nothing is rendered until role is checked
   if (loading || role === null) {
     return <div>Loading...</div>;
   }
